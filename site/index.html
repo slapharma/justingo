@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JustinGo: London running routes with voice directions</title>
+  <meta name="description" content="Pick a route, press start and follow the voice. JustinGo gives you turn-by-turn directions on running routes across Greater London." />
+  <meta name="theme-color" content="#FF5F1F" />
+  <meta property="og:title" content="JustinGo" />
+  <meta property="og:description" content="Run anywhere in London. Just listen for the next turn." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #FFF8F3;
+      --surface: #FFFFFF;
+      --surface-alt: #FFEDE0;
+      --ink: #1A1410;
+      --muted: #5C4F46;
+      --border: #EADBD0;
+      --accent: #FF5F1F;
+      --on-accent: #1A1410;
+      --accent-text: #B93C0A;
+      --dark: #120E0B;
+      --dark-surface: #1E1814;
+      --dark-ink: #FFF4EC;
+      --dark-muted: #BFAFA3;
+      --radius: 20px;
+      --max: 1120px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #120E0B;
+        --surface: #1E1814;
+        --surface-alt: #2A211B;
+        --ink: #FFF4EC;
+        --muted: #BFAFA3;
+        --border: #3A2E26;
+        --accent: #FF6A2B;
+        --accent-text: #FF8F5A;
+      }
+    }
+    :root[data-theme="dark"] {
+      --bg: #120E0B;
+      --surface: #1E1814;
+      --surface-alt: #2A211B;
+      --ink: #FFF4EC;
+      --muted: #BFAFA3;
+      --border: #3A2E26;
+      --accent: #FF6A2B;
+      --accent-text: #FF8F5A;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
+    body { margin: 0; background: var(--bg); color: var(--ink); font-family: Barlow, system-ui, sans-serif; font-size: 18px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+    h1, h2, h3 { font-family: "Barlow Condensed", Impact, sans-serif; text-transform: uppercase; line-height: 0.95; margin: 0; letter-spacing: 0.01em; }
+    p { margin: 0; }
+    .wrap { width: 100%; max-width: var(--max); margin: 0 auto; padding: 0 16px; }
+    @media (min-width: 768px) { .wrap { padding: 0 32px; } }
+    .skip { position: absolute; left: -999px; top: 8px; background: var(--ink); color: var(--bg); padding: 8px 12px; border-radius: 8px; z-index: 50; }
+    .skip:focus { left: 8px; }
+    :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+
+    /* Nav */
+    .nav { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
+    .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .brand { font-family: "Barlow Condensed", Impact, sans-serif; font-weight: 800; font-size: 30px; text-transform: uppercase; text-decoration: none; letter-spacing: 0.01em; }
+    .brand span { color: var(--accent-text); }
+    .nav-links { display: flex; gap: 24px; align-items: center; }
+    .nav-links a:not(.btn) { text-decoration: none; font-weight: 500; color: var(--muted); display: none; }
+    .nav-links a:not(.btn):hover { color: var(--ink); }
+    @media (min-width: 768px) { .nav-links a:not(.btn) { display: inline; } }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 0 22px; border-radius: 14px; border: 2px solid var(--accent); background: var(--accent); color: var(--on-accent); font-family: "Barlow Condensed", Impact, sans-serif; font-weight: 700; font-size: 20px; text-transform: uppercase; letter-spacing: 0.03em; text-decoration: none; cursor: pointer; transition: transform 150ms ease, box-shadow 150ms ease, background-color 150ms ease; }
+    .btn:hover { box-shadow: 0 6px 0 var(--ink); transform: translateY(-2px); }
+    .btn:active { transform: translateY(0); box-shadow: none; }
+    .btn.secondary { background: transparent; color: var(--ink); border-color: var(--ink); }
+    .btn.small { min-height: 40px; font-size: 17px; padding: 0 16px; }
+    .btn svg { width: 22px; height: 22px; }
+
+    /* Hero */
+    .hero { padding: 40px 0 64px; overflow: hidden; }
+    .hero .wrap { display: grid; gap: 48px; align-items: center; }
+    @media (min-width: 960px) { .hero { padding: 72px 0 96px; } .hero .wrap { grid-template-columns: 1.1fr 0.9fr; } }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-text); margin-bottom: 16px; }
+    .eyebrow::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 30%, transparent); }
+    .hero h1 { font-size: clamp(56px, 11vw, 112px); font-weight: 800; }
+    .hero h1 em { font-style: normal; color: var(--bg); background: var(--ink); padding: 0 0.12em; display: inline-block; transform: rotate(-1.5deg); }
+    .hero .lede { font-size: clamp(19px, 2.2vw, 22px); color: var(--muted); max-width: 34ch; margin: 24px 0 32px; }
+    .cta-row { display: flex; flex-wrap: wrap; gap: 12px; }
+    .stores { display: flex; flex-wrap: wrap; gap: 10px 20px; margin-top: 24px; color: var(--muted); font-size: 15px; font-weight: 500; }
+    .stores span { display: inline-flex; align-items: center; gap: 8px; }
+    .stores svg { width: 18px; height: 18px; }
+
+    .phone-stage { position: relative; display: flex; justify-content: center; }
+    .phone-stage::before { content: ""; position: absolute; inset: 8% -20% 8% -20%; background: var(--accent); border-radius: 40px; transform: rotate(6deg); }
+    .phone { position: relative; width: min(340px, 86vw); aspect-ratio: 390 / 844; border-radius: 48px; border: 11px solid #1A1410; background: #1A1410; box-shadow: 0 30px 60px rgba(26, 20, 16, 0.35); overflow: hidden; }
+    .phone iframe { position: absolute; top: 0; left: 0; width: 390px; height: 844px; border: 0; transform-origin: top left; background: var(--bg); }
+    .phone-caption { position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--bg); font-weight: 700; font-size: 14px; padding: 6px 14px; border-radius: 999px; white-space: nowrap; }
+
+    /* Voice cue ticker */
+    .ticker { background: var(--ink); color: var(--dark-ink); overflow: hidden; border-block: 4px solid var(--accent); }
+    .ticker-track { display: flex; gap: 48px; padding: 18px 0; width: max-content; animation: scroll 40s linear infinite; font-family: "Barlow Condensed", Impact, sans-serif; font-weight: 700; font-size: 26px; text-transform: uppercase; }
+    .ticker-track span { display: inline-flex; align-items: center; gap: 14px; white-space: nowrap; }
+    .ticker-track span::before { content: ""; width: 12px; height: 12px; background: var(--accent); border-radius: 3px; transform: rotate(45deg); }
+    @keyframes scroll { to { transform: translateX(-50%); } }
+
+    section { padding: 72px 0; }
+    @media (min-width: 960px) { section { padding: 104px 0; } }
+    .section-head { max-width: 640px; margin-bottom: 48px; }
+    .section-head h2 { font-size: clamp(44px, 7vw, 72px); font-weight: 800; }
+    .section-head p { color: var(--muted); margin-top: 16px; font-size: 20px; }
+
+    /* Steps */
+    .steps { display: grid; gap: 16px; counter-reset: step; }
+    @media (min-width: 768px) { .steps { grid-template-columns: repeat(3, 1fr); } }
+    .step { background: var(--surface); border: 2px solid var(--ink); border-radius: var(--radius); padding: 28px; box-shadow: 6px 6px 0 var(--ink); }
+    .step::before { counter-increment: step; content: counter(step); display: grid; place-items: center; width: 52px; height: 52px; border-radius: 14px; background: var(--accent); color: var(--on-accent); font-family: "Barlow Condensed", Impact, sans-serif; font-weight: 800; font-size: 32px; margin-bottom: 20px; }
+    .step h3 { font-size: 34px; margin-bottom: 8px; }
+    .step p { color: var(--muted); }
+
+    /* Features */
+    .features { background: var(--dark); color: var(--dark-ink); }
+    .features .section-head p { color: var(--dark-muted); }
+    .grid { display: grid; gap: 16px; }
+    @media (min-width: 640px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1000px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+    .feature { background: var(--dark-surface); border: 1px solid #3A2E26; border-radius: var(--radius); padding: 28px; transition: border-color 200ms ease; }
+    .feature:hover { border-color: #FF6A2B; }
+    .feature .icon { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; background: #FF6A2B; color: #1A1410; margin-bottom: 20px; }
+    .feature .icon svg { width: 26px; height: 26px; }
+    .feature h3 { font-size: 30px; margin-bottom: 8px; }
+    .feature p { color: var(--dark-muted); font-size: 17px; }
+    .feature.wide { background: #FF6A2B; color: #1A1410; border-color: #FF6A2B; }
+    .feature.wide .icon { background: #1A1410; color: #FF6A2B; }
+    .feature.wide p { color: #1A1410; }
+
+    /* Routes */
+    .routes { display: grid; gap: 10px; }
+    @media (min-width: 768px) { .routes { grid-template-columns: repeat(2, 1fr); } }
+    .route { display: flex; align-items: center; gap: 16px; background: var(--surface); border: 1.5px solid var(--border); border-radius: 16px; padding: 14px 18px; text-decoration: none; transition: border-color 150ms ease; }
+    .route:hover { border-color: var(--accent); }
+    .route .km { font-family: "Barlow Condensed", Impact, sans-serif; font-weight: 800; font-size: 32px; line-height: 1; min-width: 64px; font-variant-numeric: tabular-nums; }
+    .route .km small { display: block; font-family: Barlow, sans-serif; font-size: 11px; letter-spacing: 0.1em; color: var(--muted); }
+    .route strong { display: block; font-size: 18px; line-height: 1.25; }
+    .route span { color: var(--muted); font-size: 15px; }
+    .routes-note { margin-top: 24px; color: var(--muted); }
+
+    /* CTA band */
+    .band { background: var(--accent); color: var(--on-accent); }
+    .band .wrap { display: grid; gap: 24px; align-items: center; }
+    @media (min-width: 900px) { .band .wrap { grid-template-columns: 1fr auto; } }
+    .band h2 { font-size: clamp(48px, 8vw, 88px); font-weight: 800; }
+    .band .btn { background: var(--ink); border-color: var(--ink); color: #FFF4EC; }
+    .band .btn:hover { box-shadow: 0 6px 0 #FFF4EC; }
+
+    footer { padding: 40px 0; border-top: 1px solid var(--border); color: var(--muted); font-size: 15px; }
+    footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 32px; justify-content: space-between; align-items: center; }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="nav">
+    <div class="wrap">
+      <a class="brand" href="/" aria-label="JustinGo home">Justin<span>Go</span></a>
+      <nav class="nav-links" aria-label="Main">
+        <a href="#how">How it works</a>
+        <a href="#features">Features</a>
+        <a href="#routes">Routes</a>
+        <a class="btn small" href="/app/">Try it now</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="wrap">
+        <div>
+          <p class="eyebrow">Running routes for Greater London</p>
+          <h1 id="hero-title">Just run.<br /><em>We'll say</em><br />where.</h1>
+          <p class="lede">Pick a route, press start and put your phone away. JustinGo tells you every turn before you reach it, so you never stop to check a map.</p>
+          <div class="cta-row">
+            <a class="btn" href="/app/">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3" /></svg>
+              Try it in your browser
+            </a>
+            <a class="btn secondary" href="#how">How it works</a>
+          </div>
+          <div class="stores">
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="3" /><path d="M11 18h2" /></svg>iPhone app coming soon</span>
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="3" /><path d="M11 18h2" /></svg>Android app coming soon</span>
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>Free</span>
+          </div>
+        </div>
+
+        <div class="phone-stage">
+          <div class="phone" id="phone">
+            <iframe src="/app/" title="The JustinGo app, running live" loading="lazy"></iframe>
+          </div>
+          <p class="phone-caption">Live app. Tap around.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track">
+        <span>In 200 metres, turn left</span><span>Bear right onto Serpentine Walk</span><span>Halfway there. Keep it up</span><span>Turn right, then turn left</span><span>1 kilometre. Average pace 5:30</span><span>Back on route</span>
+        <span>In 200 metres, turn left</span><span>Bear right onto Serpentine Walk</span><span>Halfway there. Keep it up</span><span>Turn right, then turn left</span><span>1 kilometre. Average pace 5:30</span><span>Back on route</span>
+      </div>
+    </div>
+
+    <section id="how" aria-labelledby="how-title">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="how-title">Three steps. No map-checking.</h2>
+          <p>Designed for running somewhere new without getting lost or breaking your stride.</p>
+        </div>
+        <ol class="steps" role="list" style="padding:0;margin:0;list-style:none">
+          <li class="step">
+            <h3>Pick a route</h3>
+            <p>Browse routes from Richmond Park to the Olympic Park, or draw your own on the map.</p>
+          </li>
+          <li class="step">
+            <h3>Press start</h3>
+            <p>Phone in your pocket, headphones in. JustinGo follows your GPS along the route.</p>
+          </li>
+          <li class="step">
+            <h3>Follow the voice</h3>
+            <p>Hear every turn at 200 metres and again as you reach it. Drift off route and it tells you.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="features" class="features" aria-labelledby="features-title">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="features-title">Built for running, not driving</h2>
+          <p>Directions that follow park paths, towpaths and trails, where car sat-navs can't go.</p>
+        </div>
+        <div class="grid">
+          <article class="feature wide">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z" /><path d="M15.5 8.5a5 5 0 0 1 0 7" /><path d="M19 5a10 10 0 0 1 0 14" /></svg></div>
+            <h3>Turn-by-turn voice</h3>
+            <p>A heads-up 200 metres out, a reminder at the turn, and back-to-back turns announced together.</p>
+          </article>
+          <article class="feature">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.29 3.86-8.47 14.67A2 2 0 0 0 3.55 21.5h16.9a2 2 0 0 0 1.73-2.97L13.71 3.86a2 2 0 0 0-3.42 0z" /><path d="M12 9v4" /><path d="M12 17h.01" /></svg></div>
+            <h3>Off-route alerts</h3>
+            <p>Stray more than 30 metres from the route and you'll hear it straight away, then a confirmation when you're back.</p>
+          </article>
+          <article class="feature">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" /></svg></div>
+            <h3>Route creator</h3>
+            <p>Tap points on the map and the route snaps to real paths. Add your own voice messages anywhere along it.</p>
+          </article>
+          <article class="feature">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18" /><path d="m7 15 4-4 3 3 5-6" /></svg></div>
+            <h3>Pace and splits</h3>
+            <p>Time, distance, current pace and estimated finish while you run. Kilometre splits when you're done.</p>
+          </article>
+          <article class="feature">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z" /><circle cx="12" cy="9" r="2.5" /></svg></div>
+            <h3>Local stories</h3>
+            <p>Routes talk about what you're passing, from the Serpentine to the Prime Meridian.</p>
+          </article>
+          <article class="feature">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="m7 10 5 5 5-5" /><path d="M12 15V3" /></svg></div>
+            <h3>GPX in and out</h3>
+            <p>Bring in a route from your watch or another app, or take a JustinGo route anywhere.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="routes" aria-labelledby="routes-title">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="routes-title">Across Greater London</h2>
+          <p>Every route checked and voiced, from a quick 3 km loop to nearly 19 km round Richmond Park.</p>
+        </div>
+        <div class="routes" id="route-list" role="list"></div>
+        <p class="routes-note">Plus any route you draw yourself.</p>
+      </div>
+    </section>
+
+    <section class="band" aria-labelledby="band-title">
+      <div class="wrap">
+        <h2 id="band-title">Your next run<br />starts here</h2>
+        <a class="btn" href="/app/">Open JustinGo</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <a class="brand" href="/" style="font-size:24px">Justin<span>Go</span></a>
+      <p>Map data © OpenStreetMap contributors · Map tiles © CARTO</p>
+      <p>© 2026 JustinGo</p>
+    </div>
+  </footer>
+
+  <script>
+    // Scale the live app to fit the phone mockup: the app is laid out at a real phone's 390 px.
+    (function () {
+      var phone = document.getElementById('phone');
+      var frame = phone && phone.querySelector('iframe');
+      if (!frame) return;
+      function fit() { frame.style.transform = 'scale(' + phone.clientWidth / 390 + ')'; }
+      fit();
+      if ('ResizeObserver' in window) new ResizeObserver(fit).observe(phone);
+      else window.addEventListener('resize', fit);
+    })();
+
+    // Route list from the same data file the app uses, generated at build time into routes.json.
+    fetch('/routes.json')
+      .then(function (r) { return r.ok ? r.json() : []; })
+      .then(function (routes) {
+        var list = document.getElementById('route-list');
+        routes
+          .slice()
+          .sort(function (a, b) { return a.distance - b.distance; })
+          .forEach(function (route) {
+            var a = document.createElement('a');
+            a.className = 'route';
+            a.setAttribute('role', 'listitem');
+            a.href = '/app/route/' + encodeURIComponent(route.id);
+            var km = document.createElement('div');
+            km.className = 'km';
+            km.textContent = (route.distance / 1000).toFixed(1);
+            var unit = document.createElement('small');
+            unit.textContent = 'KM';
+            km.appendChild(unit);
+            var text = document.createElement('div');
+            var name = document.createElement('strong');
+            name.textContent = route.name;
+            var meta = document.createElement('span');
+            meta.textContent = route.area + ' · ' + (route.loop ? 'Loop' : 'A to B') + ' · ' + route.ascent + ' m climb';
+            text.appendChild(name);
+            text.appendChild(meta);
+            a.appendChild(km);
+            a.appendChild(text);
+            list.appendChild(a);
+          });
+      })
+      .catch(function () {});
+  </script>
+</body>
+</html>

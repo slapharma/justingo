@@ -1,0 +1,32 @@
+// Only the icons the app uses. Importing from the 'lucide-react-native' barrel bundles all
+// ~1,600 icons into the web build (Metro does not tree-shake), roughly a megabyte of dead code.
+export type { LucideIcon } from 'lucide-react-native';
+export { default as ArrowUp } from 'lucide-react-native/icons/arrow-up';
+export { default as ArrowUpLeft } from 'lucide-react-native/icons/arrow-up-left';
+export { default as ArrowUpRight } from 'lucide-react-native/icons/arrow-up-right';
+export { default as BadgeCheck } from 'lucide-react-native/icons/badge-check';
+export { default as Check } from 'lucide-react-native/icons/check';
+export { default as ChevronLeft } from 'lucide-react-native/icons/chevron-left';
+export { default as ChevronRight } from 'lucide-react-native/icons/chevron-right';
+export { default as Clock } from 'lucide-react-native/icons/clock';
+export { default as Compass } from 'lucide-react-native/icons/compass';
+export { default as CornerUpLeft } from 'lucide-react-native/icons/corner-up-left';
+export { default as CornerUpRight } from 'lucide-react-native/icons/corner-up-right';
+export { default as Download } from 'lucide-react-native/icons/download';
+export { default as FastForward } from 'lucide-react-native/icons/fast-forward';
+export { default as Flag } from 'lucide-react-native/icons/flag';
+export { default as MessageSquare } from 'lucide-react-native/icons/message-square';
+export { default as Navigation } from 'lucide-react-native/icons/navigation';
+export { default as Pause } from 'lucide-react-native/icons/pause';
+export { default as PenLine } from 'lucide-react-native/icons/pen-line';
+export { default as Play } from 'lucide-react-native/icons/play';
+export { default as Repeat } from 'lucide-react-native/icons/repeat';
+export { default as RotateCcw } from 'lucide-react-native/icons/rotate-ccw';
+export { default as Save } from 'lucide-react-native/icons/save';
+export { default as Trash } from 'lucide-react-native/icons/trash';
+export { default as TriangleAlert } from 'lucide-react-native/icons/triangle-alert';
+export { default as Undo2 } from 'lucide-react-native/icons/undo-2';
+export { default as Upload } from 'lucide-react-native/icons/upload';
+export { default as Volume2 } from 'lucide-react-native/icons/volume-2';
+export { default as VolumeX } from 'lucide-react-native/icons/volume-x';
+export { default as X } from 'lucide-react-native/icons/x';

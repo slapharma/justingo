@@ -8,6 +8,9 @@ its own code, design, copy and routes.
 The repo holds three things: the app itself (Expo, TypeScript), a static marketing site, and a
 build script that combines both into one Vercel deployment.
 
+The app and the site share one visual design: white backgrounds, black type, and a single orange
+accent colour. There's no dark mode (see `app/src/theme.ts`).
+
 ## Repo layout
 
 ```
@@ -16,7 +19,8 @@ app/            Expo Router app (TypeScript). The product itself.
   src/app/      Screens (file-based routing via Expo Router).
   src/data/     routes.json, the built-in Greater London route library (committed, not fetched live).
   scripts/      build-routes.ts (regenerates routes.json), copy-maplibre-worker.cjs (postinstall).
-site/           The static one-page marketing site (plain HTML/CSS/JS, no build step).
+site/           The static one-page marketing site (plain HTML/CSS/JS, no build step), covering
+                features by group, integrations, city guides, pricing, for-business sections and an FAQ.
 scripts/        build.mjs and serve-out.mjs, which assemble the Vercel deployment from app/ and site/.
 vercel.json     Install/build/output config and routing for the Vercel project (slapharma/justingo).
 ```
@@ -34,6 +38,28 @@ demo bar inside the run screen instead of the side panel.
 
 The production build is a Vercel deployment (project `slapharma/justingo`): the marketing site at
 `/`, the app at `/app`, and the route library at `/routes.json`.
+
+## Demo features
+
+JustinGo is a preview build. Navigation, route creation and run tracking are real and work
+end-to-end; a lot of the rest of the app is a demo of the wider feature set, shown with placeholder
+content so the whole product can be seen before it's built.
+
+- **Real:** turn-by-turn voice navigation, the route library and filters, drawing or importing
+  routes, run tracking and history, GPX import/export.
+- **Demo (on screen, deliberately not wired):** the Community tab (challenges, leaderboard, badges,
+  groups, virtual races), most of the Profile tab (plan, integrations, voice/general settings, for
+  business), the Plans screen (`/premium`), For business (`/business`), Hotels (`/hotels`), city
+  guides (`/city/[id]`), and extra buttons on Discover, route detail, Create and the run summary.
+  These use placeholder images and invented names, and pressing a demo button does nothing — it has
+  no `onPress` handler. Shared demo building blocks live in `app/src/components/demo.tsx`, their
+  content in `app/src/demoData.ts`.
+
+The app has five tabs: Discover, Create, Community, History and Profile.
+
+Every researched feature and business model — with its pricing tier and Built/Demo/Later status —
+is listed in [`docs/feature-inventory.md`](docs/feature-inventory.md). Everything is free during the
+preview.
 
 ## Develop
 
@@ -159,7 +185,7 @@ self-hosted alternatives.
 |---|---|---|
 | OSRM demo server (`routing.openstreetmap.de`, foot profile) | Snapping waypoints to footpaths, park paths and trails when building routes | Run by FOSSGIS under a fair-use policy — keyless, but not for heavy or commercial use. A production app should move to a paid host (e.g. OpenRouteService) or a self-hosted OSRM instance. |
 | Open-Meteo elevation API | Elevation samples along each route (Copernicus 90 m DEM) | Free tier is for non-commercial use. |
-| CARTO basemaps (`basemaps.cartocdn.com`, Positron / Dark Matter styles) | Map tiles in the browser preview and app map (via MapLibre GL) | Free tier has usage limits; a production app should move to a paid tile provider (e.g. MapTiler). |
+| CARTO basemaps (`basemaps.cartocdn.com`, Positron style) | Map tiles in the browser preview and app map (via MapLibre GL) | Free tier has usage limits; a production app should move to a paid tile provider (e.g. MapTiler). |
 
 Attribution shown on the site and required by the map data: **© OpenStreetMap contributors, © CARTO**.
 

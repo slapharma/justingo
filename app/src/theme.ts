@@ -1,51 +1,37 @@
-import { useColorScheme } from 'react-native';
-
-// JustinGo design tokens. Orange is a fill colour: text on it is dark ink (6.6:1), never white
-// (3:1 fails WCAG). Orange *text* uses the deeper `accentText`, which passes 4.5:1 on its background.
+// JustinGo design tokens: white backgrounds, black type and accents, orange as the single highlight.
+// Orange is a fill colour: text on it is black (7:1), never white (3:1 fails WCAG). Orange *text*
+// uses the deeper `accentText`, which passes 4.5:1 on white.
+//
+// One light theme everywhere, including the run screen: the brand is white, and a white screen
+// with black type is the most legible option in daylight.
 const light = {
   scheme: 'light' as 'light' | 'dark',
-  bg: '#FFF8F3',
+  bg: '#FFFFFF',
   surface: '#FFFFFF',
-  surfaceAlt: '#FFEDE0',
-  ink: '#1A1410',
-  muted: '#5C4F46',
-  border: '#EADBD0',
+  surfaceAlt: '#F4F4F4',
+  ink: '#0A0A0A',
+  muted: '#5A5A5A',
+  border: '#E4E4E4',
   accent: '#FF5F1F',
-  onAccent: '#1A1410',
+  onAccent: '#0A0A0A',
   accentText: '#B93C0A',
+  /** Black blocks: primary buttons on white, badges, the stats bar. */
+  contrast: '#0A0A0A',
+  onContrast: '#FFFFFF',
   danger: '#C8261B',
   onDanger: '#FFFFFF',
   success: '#15803D',
-  routeDim: '#B8A89C',
+  routeDim: '#9A9A9A',
   mapStyle: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-};
-
-const dark: typeof light = {
-  scheme: 'dark',
-  bg: '#120E0B',
-  surface: '#1E1814',
-  surfaceAlt: '#2A211B',
-  ink: '#FFF4EC',
-  muted: '#BFAFA3',
-  border: '#3A2E26',
-  accent: '#FF6A2B',
-  onAccent: '#1A1410',
-  accentText: '#FF8F5A',
-  danger: '#FF5A4E',
-  onDanger: '#1A1410',
-  success: '#4ADE80',
-  routeDim: '#6B5B50',
-  mapStyle: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
 };
 
 export type Theme = typeof light;
 
 export function useTheme(): Theme {
-  return useColorScheme() === 'dark' ? dark : light;
+  return light;
 }
 
-/** The run screen is always dark: higher contrast outdoors and kinder to the battery on OLED. */
-export const runTheme = dark;
+export const runTheme = light;
 
 export const font = {
   display: 'BarlowCondensed_700Bold',

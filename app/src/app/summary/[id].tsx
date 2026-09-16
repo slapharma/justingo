@@ -1,8 +1,9 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { Check, Clock, RotateCcw, Trash } from '../../icons';
+import { Activity, Check, Clock, PenLine, RotateCcw, Share2, Trash } from '../../icons';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import RouteMap from '../../components/RouteMap';
+import { DemoButton } from '../../components/demo';
 import { Badge, Body, Button, Card, EmptyState, Heading, Stat } from '../../components/ui';
 import { date, duration, km, pace } from '../../format';
 import { useRoute, useRuns } from '../../store';
@@ -41,7 +42,6 @@ export default function Summary() {
         </View>
 
         <RouteMap
-          key={theme.scheme}
           lines={[
             ...(route ? [{ id: route.id, path: route.path, emphasis: 'dim' as const }] : []),
             ...(run.trace.length > 1 ? [{ id: 'trace', path: run.trace, emphasis: 'primary' as const }] : []),
@@ -81,6 +81,12 @@ export default function Summary() {
             </Card>
           </View>
         )}
+
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: space.sm }}>
+          <DemoButton label="Share image" icon={Share2} variant="dark" style={{ flexGrow: 1 }} />
+          <DemoButton label="Save as route" icon={PenLine} style={{ flexGrow: 1 }} />
+          <DemoButton label="Send to Strava" icon={Activity} tier="premium" style={{ flexGrow: 1 }} />
+        </View>
 
         <View style={{ flexDirection: 'row', gap: space.sm }}>
           {route && <Button variant="secondary" icon={RotateCcw} label="Run again" onPress={() => router.replace({ pathname: '/route/[id]', params: { id: route.id } })} style={{ flex: 1 }} />}

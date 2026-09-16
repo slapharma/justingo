@@ -4,8 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>JustinGo: London running routes with voice directions</title>
-  <meta name="description" content="Pick a route, press start and follow the voice. JustinGo gives you turn-by-turn directions on running routes across Greater London." />
-  <meta name="theme-color" content="#FF5F1F" />
+  <meta name="description" content="Pick a route, press start and follow the voice. JustinGo gives you turn-by-turn directions on running routes across Greater London, with plans for runners, creators, hotels and races." />
+  <meta name="theme-color" content="#FFFFFF" />
   <meta property="og:title" content="JustinGo" />
   <meta property="og:description" content="Run anywhere in London. Just listen for the next turn." />
   <meta property="og:type" content="website" />
@@ -15,166 +15,258 @@
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #FFF8F3;
-      --surface: #FFFFFF;
-      --surface-alt: #FFEDE0;
-      --ink: #1A1410;
-      --muted: #5C4F46;
-      --border: #EADBD0;
+      --bg: #FFFFFF;
+      --ink: #0A0A0A;
+      --muted: #555555;
+      --grey: #F4F4F4;
+      --border: #E4E4E4;
       --accent: #FF5F1F;
-      --on-accent: #1A1410;
       --accent-text: #B93C0A;
-      --dark: #120E0B;
-      --dark-surface: #1E1814;
-      --dark-ink: #FFF4EC;
-      --dark-muted: #BFAFA3;
+      --on-dark: #FFFFFF;
+      --on-dark-muted: #C8C8C8;
       --radius: 20px;
       --max: 1120px;
-    }
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme="light"]) {
-        --bg: #120E0B;
-        --surface: #1E1814;
-        --surface-alt: #2A211B;
-        --ink: #FFF4EC;
-        --muted: #BFAFA3;
-        --border: #3A2E26;
-        --accent: #FF6A2B;
-        --accent-text: #FF8F5A;
-      }
-    }
-    :root[data-theme="dark"] {
-      --bg: #120E0B;
-      --surface: #1E1814;
-      --surface-alt: #2A211B;
-      --ink: #FFF4EC;
-      --muted: #BFAFA3;
-      --border: #3A2E26;
-      --accent: #FF6A2B;
-      --accent-text: #FF8F5A;
+      --head: "Barlow Condensed", Impact, sans-serif;
+      color-scheme: light;
     }
     *, *::before, *::after { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
+    html { scroll-behavior: smooth; scroll-padding-top: 120px; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
     body { margin: 0; background: var(--bg); color: var(--ink); font-family: Barlow, system-ui, sans-serif; font-size: 18px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
     a { color: inherit; }
-    h1, h2, h3 { font-family: "Barlow Condensed", Impact, sans-serif; text-transform: uppercase; line-height: 0.95; margin: 0; letter-spacing: 0.01em; }
-    p { margin: 0; }
+    h1, h2, h3 { font-family: var(--head); text-transform: uppercase; line-height: 0.95; margin: 0; letter-spacing: 0.01em; }
+    p, ul { margin: 0; }
+    ul { padding: 0; list-style: none; }
     .wrap { width: 100%; max-width: var(--max); margin: 0 auto; padding: 0 16px; }
     @media (min-width: 768px) { .wrap { padding: 0 32px; } }
-    .skip { position: absolute; left: -999px; top: 8px; background: var(--ink); color: var(--bg); padding: 8px 12px; border-radius: 8px; z-index: 50; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+    .skip { position: absolute; left: -999px; top: 8px; background: var(--ink); color: var(--on-dark); padding: 10px 14px; border-radius: 8px; z-index: 50; }
     .skip:focus { left: 8px; }
-    :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+    :focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+    .dark :focus-visible { outline-color: var(--accent); }
+    .icon-svg { width: 24px; height: 24px; flex: none; }
 
     /* Nav */
-    .nav { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
-    .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
-    .brand { font-family: "Barlow Condensed", Impact, sans-serif; font-weight: 800; font-size: 30px; text-transform: uppercase; text-decoration: none; letter-spacing: 0.01em; }
+    .nav { position: sticky; top: 0; z-index: 20; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
+    .nav .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; column-gap: 24px; }
+    .brand { font-family: var(--head); font-weight: 800; font-size: 30px; text-transform: uppercase; text-decoration: none; letter-spacing: 0.01em; min-height: 64px; display: inline-flex; align-items: center; }
     .brand span { color: var(--accent-text); }
-    .nav-links { display: flex; gap: 24px; align-items: center; }
-    .nav-links a:not(.btn) { text-decoration: none; font-weight: 500; color: var(--muted); display: none; }
-    .nav-links a:not(.btn):hover { color: var(--ink); }
-    @media (min-width: 768px) { .nav-links a:not(.btn) { display: inline; } }
+    .nav-links { order: 3; width: 100%; display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; margin: 0 -8px; padding-bottom: 4px; }
+    .nav-links::-webkit-scrollbar { display: none; }
+    .nav-links a { flex: none; display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; text-decoration: none; font-weight: 500; color: var(--muted); border-radius: 8px; }
+    .nav-links a:hover { color: var(--ink); background: var(--grey); }
+    .nav-links a:focus-visible { outline-offset: -3px; }
+    .nav .btn { order: 2; }
+    @media (min-width: 820px) {
+      .nav .wrap { flex-wrap: nowrap; }
+      .nav-links { order: 2; width: auto; margin: 0 0 0 auto; padding: 0; overflow: visible; }
+      .nav .btn { order: 3; }
+    }
 
-    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 0 22px; border-radius: 14px; border: 2px solid var(--accent); background: var(--accent); color: var(--on-accent); font-family: "Barlow Condensed", Impact, sans-serif; font-weight: 700; font-size: 20px; text-transform: uppercase; letter-spacing: 0.03em; text-decoration: none; cursor: pointer; transition: transform 150ms ease, box-shadow 150ms ease, background-color 150ms ease; }
-    .btn:hover { box-shadow: 0 6px 0 var(--ink); transform: translateY(-2px); }
+    /* Buttons */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 0 22px; border-radius: 14px; border: 2px solid var(--accent); background: var(--accent); color: var(--ink); font-family: var(--head); font-weight: 700; font-size: 20px; line-height: 1; text-transform: uppercase; letter-spacing: 0.03em; text-decoration: none; cursor: pointer; transition: transform 150ms ease, box-shadow 150ms ease, background-color 150ms ease; }
+    .btn:hover { box-shadow: 0 5px 0 var(--ink); transform: translateY(-2px); }
     .btn:active { transform: translateY(0); box-shadow: none; }
-    .btn.secondary { background: transparent; color: var(--ink); border-color: var(--ink); }
-    .btn.small { min-height: 40px; font-size: 17px; padding: 0 16px; }
+    .btn.secondary { background: var(--bg); color: var(--ink); border-color: var(--ink); }
+    .btn.black { background: var(--ink); color: var(--on-dark); border-color: var(--ink); }
+    .btn.black:hover { box-shadow: 0 5px 0 var(--accent); }
+    .btn.small { min-height: 44px; font-size: 18px; padding: 0 16px; }
+    .btn.block { width: 100%; }
     .btn svg { width: 22px; height: 22px; }
+    button.btn::after { content: "Demo"; font-family: Barlow, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; padding: 3px 6px; border-radius: 6px; background: rgba(10, 10, 10, 0.1); }
+    button.btn.black::after { background: rgba(255, 255, 255, 0.18); }
 
     /* Hero */
-    .hero { padding: 40px 0 64px; overflow: hidden; }
-    .hero .wrap { display: grid; gap: 48px; align-items: center; }
-    @media (min-width: 960px) { .hero { padding: 72px 0 96px; } .hero .wrap { grid-template-columns: 1.1fr 0.9fr; } }
-    .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-text); margin-bottom: 16px; }
-    .eyebrow::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 30%, transparent); }
+    .hero { padding: 40px 0 72px; overflow: hidden; }
+    .hero .wrap { display: grid; gap: 56px; align-items: center; }
+    @media (min-width: 960px) { .hero { padding: 72px 0 104px; } .hero .wrap { grid-template-columns: 1.1fr 0.9fr; } }
+    .eyebrow { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-text); margin-bottom: 16px; }
+    .eyebrow::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px rgba(255, 95, 31, 0.25); }
     .hero h1 { font-size: clamp(56px, 11vw, 112px); font-weight: 800; }
-    .hero h1 em { font-style: normal; color: var(--bg); background: var(--ink); padding: 0 0.12em; display: inline-block; transform: rotate(-1.5deg); }
-    .hero .lede { font-size: clamp(19px, 2.2vw, 22px); color: var(--muted); max-width: 34ch; margin: 24px 0 32px; }
+    .hero h1 em { font-style: normal; color: var(--on-dark); background: var(--ink); padding: 0 0.12em; display: inline-block; transform: rotate(-1.5deg); }
+    .hero .lede { font-size: clamp(19px, 2.2vw, 22px); color: var(--muted); max-width: 36ch; margin: 24px 0 32px; }
     .cta-row { display: flex; flex-wrap: wrap; gap: 12px; }
     .stores { display: flex; flex-wrap: wrap; gap: 10px 20px; margin-top: 24px; color: var(--muted); font-size: 15px; font-weight: 500; }
     .stores span { display: inline-flex; align-items: center; gap: 8px; }
     .stores svg { width: 18px; height: 18px; }
-
-    .phone-stage { position: relative; display: flex; justify-content: center; }
-    .phone-stage::before { content: ""; position: absolute; inset: 8% -20% 8% -20%; background: var(--accent); border-radius: 40px; transform: rotate(6deg); }
-    .phone { position: relative; width: min(340px, 86vw); aspect-ratio: 390 / 844; border-radius: 48px; border: 11px solid #1A1410; background: #1A1410; box-shadow: 0 30px 60px rgba(26, 20, 16, 0.35); overflow: hidden; }
+    .phone-stage { position: relative; display: flex; justify-content: center; padding-bottom: 12px; }
+    .phone-stage::before { content: ""; position: absolute; inset: 8% -12% 8% -12%; background: var(--accent); border-radius: 40px; transform: rotate(6deg); }
+    .phone { position: relative; width: min(340px, 82vw); aspect-ratio: 390 / 844; border-radius: 48px; border: 11px solid var(--ink); background: var(--ink); box-shadow: 0 30px 60px rgba(10, 10, 10, 0.3); overflow: hidden; }
     .phone iframe { position: absolute; top: 0; left: 0; width: 390px; height: 844px; border: 0; transform-origin: top left; background: var(--bg); }
-    .phone-caption { position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--bg); font-weight: 700; font-size: 14px; padding: 6px 14px; border-radius: 999px; white-space: nowrap; }
+    .phone-caption { position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--on-dark); font-weight: 700; font-size: 14px; padding: 6px 14px; border-radius: 999px; white-space: nowrap; }
 
     /* Voice cue ticker */
-    .ticker { background: var(--ink); color: var(--dark-ink); overflow: hidden; border-block: 4px solid var(--accent); }
-    .ticker-track { display: flex; gap: 48px; padding: 18px 0; width: max-content; animation: scroll 40s linear infinite; font-family: "Barlow Condensed", Impact, sans-serif; font-weight: 700; font-size: 26px; text-transform: uppercase; }
+    .ticker { background: var(--ink); color: var(--on-dark); overflow: hidden; border-block: 4px solid var(--accent); }
+    .ticker-track { display: flex; gap: 48px; padding: 18px 0; width: max-content; animation: scroll 40s linear infinite; font-family: var(--head); font-weight: 700; font-size: 26px; text-transform: uppercase; }
     .ticker-track span { display: inline-flex; align-items: center; gap: 14px; white-space: nowrap; }
     .ticker-track span::before { content: ""; width: 12px; height: 12px; background: var(--accent); border-radius: 3px; transform: rotate(45deg); }
     @keyframes scroll { to { transform: translateX(-50%); } }
 
+    /* Sections */
     section { padding: 72px 0; }
     @media (min-width: 960px) { section { padding: 104px 0; } }
-    .section-head { max-width: 640px; margin-bottom: 48px; }
+    section + section:not(.band) { border-top: 1px solid var(--border); }
+    .section-head { max-width: 680px; margin-bottom: 40px; }
     .section-head h2 { font-size: clamp(44px, 7vw, 72px); font-weight: 800; }
+    .section-head h2 mark { background: none; color: var(--accent-text); }
     .section-head p { color: var(--muted); margin-top: 16px; font-size: 20px; }
+    .kicker { font-weight: 700; font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-text); margin-bottom: 12px; }
 
     /* Steps */
     .steps { display: grid; gap: 16px; counter-reset: step; }
     @media (min-width: 768px) { .steps { grid-template-columns: repeat(3, 1fr); } }
-    .step { background: var(--surface); border: 2px solid var(--ink); border-radius: var(--radius); padding: 28px; box-shadow: 6px 6px 0 var(--ink); }
-    .step::before { counter-increment: step; content: counter(step); display: grid; place-items: center; width: 52px; height: 52px; border-radius: 14px; background: var(--accent); color: var(--on-accent); font-family: "Barlow Condensed", Impact, sans-serif; font-weight: 800; font-size: 32px; margin-bottom: 20px; }
+    .step { background: var(--bg); border: 2px solid var(--ink); border-radius: var(--radius); padding: 28px; box-shadow: 6px 6px 0 var(--ink); }
+    .step::before { counter-increment: step; content: counter(step); display: grid; place-items: center; width: 52px; height: 52px; border-radius: 14px; background: var(--accent); color: var(--ink); font-family: var(--head); font-weight: 800; font-size: 32px; margin-bottom: 20px; }
     .step h3 { font-size: 34px; margin-bottom: 8px; }
     .step p { color: var(--muted); }
 
+    /* Tier tags */
+    .tag { display: inline-flex; align-items: center; flex: none; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1; padding: 5px 8px; border-radius: 6px; border: 1.5px solid var(--ink); color: var(--ink); background: var(--bg); white-space: nowrap; }
+    .tag.premium { background: var(--accent); border-color: var(--accent); }
+    .tag.creator { background: var(--ink); color: var(--on-dark); }
+    .legend { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin-top: 20px; font-size: 15px; color: var(--muted); }
+    .legend span { display: inline-flex; align-items: center; gap: 8px; }
+
     /* Features */
-    .features { background: var(--dark); color: var(--dark-ink); }
-    .features .section-head p { color: var(--dark-muted); }
-    .grid { display: grid; gap: 16px; }
-    @media (min-width: 640px) { .grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (min-width: 1000px) { .grid { grid-template-columns: repeat(3, 1fr); } }
-    .feature { background: var(--dark-surface); border: 1px solid #3A2E26; border-radius: var(--radius); padding: 28px; transition: border-color 200ms ease; }
-    .feature:hover { border-color: #FF6A2B; }
-    .feature .icon { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; background: #FF6A2B; color: #1A1410; margin-bottom: 20px; }
-    .feature .icon svg { width: 26px; height: 26px; }
-    .feature h3 { font-size: 30px; margin-bottom: 8px; }
-    .feature p { color: var(--dark-muted); font-size: 17px; }
-    .feature.wide { background: #FF6A2B; color: #1A1410; border-color: #FF6A2B; }
-    .feature.wide .icon { background: #1A1410; color: #FF6A2B; }
-    .feature.wide p { color: #1A1410; }
+    .feature-grid { display: grid; gap: 16px; }
+    @media (min-width: 720px) { .feature-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1040px) { .feature-grid { grid-template-columns: repeat(3, 1fr); } }
+    .group { border: 1.5px solid var(--border); border-radius: var(--radius); padding: 24px; background: var(--bg); }
+    .group-head { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+    .group .icon { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; background: var(--accent); color: var(--ink); flex: none; }
+    .group .icon svg { width: 26px; height: 26px; }
+    .group h3 { font-size: 30px; }
+    .group li { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 9px 0; border-top: 1px solid var(--border); font-size: 16px; line-height: 1.35; }
+    .group li small { display: block; color: var(--muted); font-size: 13px; }
+    .group.dark { background: var(--ink); color: var(--on-dark); border-color: var(--ink); }
+    .group.dark li { border-top-color: #2A2A2A; }
+    .group.dark li small { color: var(--on-dark-muted); }
+    .group.dark .tag:not(.premium) { border-color: var(--on-dark); }
+    .group.dark .tag.creator { background: var(--on-dark); color: var(--ink); }
+    .group.dark .tag:not(.premium):not(.creator) { background: var(--ink); color: var(--on-dark); }
+    @media (min-width: 1040px) { .group.span2 { grid-column: span 2; } .group.span2 ul { columns: 2; column-gap: 32px; } .group.span2 li { break-inside: avoid; } }
+
+    /* Integrations */
+    .strip { display: grid; gap: 24px; align-items: center; }
+    @media (min-width: 900px) { .strip { grid-template-columns: 0.8fr 1.2fr; } }
+    .strip h2 { font-size: clamp(40px, 6vw, 60px); font-weight: 800; }
+    .strip > div > p { color: var(--muted); margin-top: 12px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 12px; }
+    .chip { display: inline-flex; align-items: center; gap: 12px; min-height: 56px; padding: 10px 16px; border: 2px solid var(--ink); border-radius: 999px; font-weight: 700; font-size: 17px; line-height: 1.2; }
+    .chip .tag { margin-left: 4px; }
+
+    /* Placeholder images */
+    .ph { position: relative; margin: 0; aspect-ratio: 4 / 3; border-radius: 16px; overflow: hidden; display: grid; place-content: center; justify-items: center; gap: 8px; padding: 16px; text-align: center; color: var(--muted); background-color: var(--grey); background-image: repeating-linear-gradient(135deg, transparent 0 14px, rgba(10, 10, 10, 0.045) 14px 16px); border: 1px solid var(--border); }
+    .ph svg { width: 32px; height: 32px; color: #8A8A8A; }
+    .ph figcaption { font-size: 14px; font-weight: 500; line-height: 1.3; }
+    .ph.wide { aspect-ratio: 16 / 9; }
+
+    /* City guides */
+    .cities { display: grid; gap: 16px; }
+    @media (min-width: 640px) { .cities { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1000px) { .cities { grid-template-columns: repeat(3, 1fr); } }
+    .city { border: 1.5px solid var(--border); border-radius: var(--radius); padding: 12px 12px 20px; display: flex; flex-direction: column; gap: 14px; }
+    .city h3 { font-size: 30px; padding: 0 8px; }
+    .city p { color: var(--muted); font-size: 16px; padding: 0 8px; flex: 1; }
+    .city .btn { margin: 0 8px; align-self: flex-start; }
 
     /* Routes */
     .routes { display: grid; gap: 10px; }
     @media (min-width: 768px) { .routes { grid-template-columns: repeat(2, 1fr); } }
-    .route { display: flex; align-items: center; gap: 16px; background: var(--surface); border: 1.5px solid var(--border); border-radius: 16px; padding: 14px 18px; text-decoration: none; transition: border-color 150ms ease; }
+    .route { display: flex; align-items: center; gap: 16px; min-height: 64px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 16px; padding: 14px 18px; text-decoration: none; transition: border-color 150ms ease; }
     .route:hover { border-color: var(--accent); }
-    .route .km { font-family: "Barlow Condensed", Impact, sans-serif; font-weight: 800; font-size: 32px; line-height: 1; min-width: 64px; font-variant-numeric: tabular-nums; }
+    .route .km { font-family: var(--head); font-weight: 800; font-size: 32px; line-height: 1; min-width: 64px; font-variant-numeric: tabular-nums; }
     .route .km small { display: block; font-family: Barlow, sans-serif; font-size: 11px; letter-spacing: 0.1em; color: var(--muted); }
     .route strong { display: block; font-size: 18px; line-height: 1.25; }
     .route span { color: var(--muted); font-size: 15px; }
+    .routes:empty { display: none; }
     .routes-note { margin-top: 24px; color: var(--muted); }
 
+    /* Pricing */
+    .plans { display: grid; gap: 16px; align-items: stretch; }
+    @media (min-width: 900px) { .plans { grid-template-columns: repeat(3, 1fr); } }
+    .plan { position: relative; display: flex; flex-direction: column; gap: 20px; border: 1.5px solid var(--border); border-radius: var(--radius); padding: 28px; background: var(--bg); }
+    .plan.featured { border: 3px solid var(--accent); box-shadow: 8px 8px 0 var(--ink); }
+    .plan .badge { position: absolute; top: -14px; left: 24px; background: var(--accent); color: var(--ink); font-weight: 700; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; }
+    .plan h3 { font-size: 36px; }
+    .plan .for { color: var(--muted); font-size: 16px; margin-top: 6px; }
+    .price { font-family: var(--head); font-weight: 800; font-size: 56px; line-height: 1; }
+    .price small { font-family: Barlow, sans-serif; font-weight: 500; font-size: 17px; color: var(--muted); margin-left: 4px; }
+    .price-alt { color: var(--muted); font-size: 15px; margin-top: 6px; }
+    .ticks { display: grid; gap: 10px; flex: 1; }
+    .ticks li { display: flex; gap: 10px; font-size: 16px; line-height: 1.4; }
+    .ticks svg { width: 20px; height: 20px; flex: none; margin-top: 1px; color: var(--accent-text); }
+    .preview-note { margin-top: 28px; display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: var(--grey); border-radius: 14px; font-weight: 700; }
+    .preview-note::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); flex: none; }
+
+    /* Business */
+    .biz { display: grid; gap: 16px; }
+    @media (min-width: 720px) { .biz { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1040px) { .biz { grid-template-columns: repeat(4, 1fr); } }
+    .seg { border: 1.5px solid var(--border); border-radius: var(--radius); padding: 12px 12px 24px; display: flex; flex-direction: column; gap: 16px; background: var(--bg); }
+    .seg-body { padding: 0 8px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
+    .seg h3 { font-size: 30px; }
+    .seg .pitch { font-size: 17px; font-weight: 500; line-height: 1.45; }
+    .seg .meta { font-size: 14px; color: var(--muted); }
+    .seg .ticks { flex: 1; }
+    .seg .ticks li { font-size: 15px; }
+    .seg .btn { align-self: flex-start; }
+    .seg.major { border: 2px solid var(--ink); }
+    @media (min-width: 720px) { .seg.major { grid-column: span 2; } }
+    @media (min-width: 1040px) {
+      .seg.major { flex-direction: row; padding: 12px; }
+      .seg.major .ph { width: 45%; flex: none; aspect-ratio: auto; min-height: 300px; }
+      .seg.major .seg-body { padding: 12px 12px 12px 4px; }
+      .seg.major h3 { font-size: 40px; }
+    }
+
+    /* FAQ */
+    .faq { max-width: 820px; }
+    .faq details { border-top: 1.5px solid var(--border); }
+    .faq details:last-child { border-bottom: 1.5px solid var(--border); }
+    .faq summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; min-height: 64px; padding: 12px 0; font-weight: 700; font-size: 20px; line-height: 1.3; }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary::after { content: "+"; flex: none; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: var(--grey); font-size: 24px; font-weight: 500; transition: transform 150ms ease, background-color 150ms ease; }
+    .faq details[open] summary::after { content: "\2212"; background: var(--accent); }
+    .faq details p { padding: 0 48px 20px 0; color: var(--muted); }
+
     /* CTA band */
-    .band { background: var(--accent); color: var(--on-accent); }
-    .band .wrap { display: grid; gap: 24px; align-items: center; }
+    .band { background: var(--ink); color: var(--on-dark); border-top: 6px solid var(--accent); }
+    .band .wrap { display: grid; gap: 28px; align-items: center; }
     @media (min-width: 900px) { .band .wrap { grid-template-columns: 1fr auto; } }
     .band h2 { font-size: clamp(48px, 8vw, 88px); font-weight: 800; }
-    .band .btn { background: var(--ink); border-color: var(--ink); color: #FFF4EC; }
-    .band .btn:hover { box-shadow: 0 6px 0 #FFF4EC; }
+    .band h2 span { color: var(--accent); }
+    .band p { color: var(--on-dark-muted); margin-top: 16px; font-size: 20px; }
+    .band .btn:hover { box-shadow: 0 5px 0 var(--on-dark); }
 
     footer { padding: 40px 0; border-top: 1px solid var(--border); color: var(--muted); font-size: 15px; }
     footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 32px; justify-content: space-between; align-items: center; }
+    footer .brand { font-size: 24px; min-height: 44px; color: var(--ink); }
   </style>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
+  <span id="demo-hint" class="sr-only">Demo button. Not connected yet.</span>
+
+  <!-- Inline SVG symbols reused across the page -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="9" cy="9" r="2" /><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21" /></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></symbol>
+  </svg>
 
   <header class="nav">
     <div class="wrap">
       <a class="brand" href="/" aria-label="JustinGo home">Justin<span>Go</span></a>
       <nav class="nav-links" aria-label="Main">
-        <a href="#how">How it works</a>
         <a href="#features">Features</a>
+        <a href="#business">Business</a>
+        <a href="#pricing">Pricing</a>
         <a href="#routes">Routes</a>
-        <a class="btn small" href="/app/">Try it now</a>
       </nav>
+      <a class="btn small" href="/app/">Try the app</a>
     </div>
   </header>
 
@@ -195,7 +287,7 @@
           <div class="stores">
             <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="3" /><path d="M11 18h2" /></svg>iPhone app coming soon</span>
             <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="3" /><path d="M11 18h2" /></svg>Android app coming soon</span>
-            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>Free</span>
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>Free during the preview</span>
           </div>
         </div>
 
@@ -238,42 +330,207 @@
       </div>
     </section>
 
-    <section id="features" class="features" aria-labelledby="features-title">
+    <section id="features" aria-labelledby="features-title">
       <div class="wrap">
         <div class="section-head">
+          <p class="kicker">Everything in the app</p>
           <h2 id="features-title">Built for running, not driving</h2>
-          <p>Directions that follow park paths, towpaths and trails, where car sat-navs can't go.</p>
+          <p>Directions that follow park paths, towpaths and trails, where car sat-navs can't go. Most of it is free.</p>
+          <div class="legend" aria-label="Plan tags">
+            <span><span class="tag">Free</span> Everyone</span>
+            <span><span class="tag premium">Premium</span> Runners who want more</span>
+            <span><span class="tag creator">Creator</span> Clubs, coaches, races</span>
+          </div>
         </div>
-        <div class="grid">
-          <article class="feature wide">
-            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z" /><path d="M15.5 8.5a5 5 0 0 1 0 7" /><path d="M19 5a10 10 0 0 1 0 14" /></svg></div>
-            <h3>Turn-by-turn voice</h3>
-            <p>A heads-up 200 metres out, a reminder at the turn, and back-to-back turns announced together.</p>
+
+        <div class="feature-grid">
+          <article class="group">
+            <div class="group-head">
+              <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z" /></svg></div>
+              <h3>Discover</h3>
+            </div>
+            <ul>
+              <li>Route library with map and list <span class="tag">Free</span></li>
+              <li>Filters for distance, loops and trails <span class="tag">Free</span></li>
+              <li>Search by place or name <span class="tag">Free</span></li>
+              <li>All, My routes and Verified tabs <span class="tag">Free</span></li>
+              <li>Verified routes badge <span class="tag">Free</span></li>
+              <li>City guides <span class="tag">Free</span></li>
+              <li>Runner-friendly hotel finder <span class="tag">Free</span></li>
+              <li>Popular routes nearby <span class="tag">Free</span></li>
+            </ul>
           </article>
-          <article class="feature">
-            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.29 3.86-8.47 14.67A2 2 0 0 0 3.55 21.5h16.9a2 2 0 0 0 1.73-2.97L13.71 3.86a2 2 0 0 0-3.42 0z" /><path d="M12 9v4" /><path d="M12 17h.01" /></svg></div>
-            <h3>Off-route alerts</h3>
-            <p>Stray more than 30 metres from the route and you'll hear it straight away, then a confirmation when you're back.</p>
+
+          <article class="group">
+            <div class="group-head">
+              <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.1 6 9.9 4 3 7v13l6.9-3 4.2 2 6.9-3V3z" /><path d="M9.9 4v13" /><path d="M14.1 6v13" /></svg></div>
+              <h3>Route detail</h3>
+            </div>
+            <ul>
+              <li>Map, distance, climb, turns, elevation <span class="tag">Free</span></li>
+              <li>Every voice cue listed <span class="tag">Free</span></li>
+              <li>Creator handle and group <span class="tag">Free</span></li>
+              <li>Photo gallery <span class="tag">Free</span></li>
+              <li><span>Points of interest<small>Water, toilets, food, first aid, viewpoints</small></span> <span class="tag">Free</span></li>
+              <li>Share link, QR code, embed <span class="tag">Free</span></li>
+              <li>GPX download <span class="tag">Free</span></li>
+              <li>TCX export with turn cues for watches <span class="tag premium">Premium</span></li>
+              <li>Download for offline <span class="tag">Free</span></li>
+              <li>3D flyover <span class="tag premium">Premium</span></li>
+              <li><span>Start modes<small>On course, virtual outdoor, treadmill</small></span> <span class="tag">Free</span></li>
+            </ul>
           </article>
-          <article class="feature">
-            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" /></svg></div>
-            <h3>Route creator</h3>
-            <p>Tap points on the map and the route snaps to real paths. Add your own voice messages anywhere along it.</p>
+
+          <article class="group dark">
+            <div class="group-head">
+              <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z" /><path d="M15.5 8.5a5 5 0 0 1 0 7" /><path d="M19 5a10 10 0 0 1 0 14" /></svg></div>
+              <h3>Navigation &amp; voice</h3>
+            </div>
+            <ul>
+              <li>Turn-by-turn voice with street names <span class="tag">Free</span></li>
+              <li>Custom voice messages along a route <span class="tag">Free</span></li>
+              <li>Off-route warning and back on route <span class="tag">Free</span></li>
+              <li>Halfway and kilometre splits <span class="tag">Free</span></li>
+              <li>Cue distance: 100, 200 or 400 m <span class="tag">Free</span></li>
+              <li>Speak stats by time or distance <span class="tag">Free</span></li>
+              <li>Voice in 9 languages <span class="tag">Free</span></li>
+              <li>Enhanced voices <span class="tag premium">Premium</span></li>
+              <li>Haptic turn alerts <span class="tag">Free</span></li>
+              <li><span>Music ducking and lock-screen guidance<small>Coming with the phone apps</small></span> <span class="tag">Free</span></li>
+              <li>Pre-recorded audio clips <span class="tag creator">Creator</span></li>
+              <li><span>AR route overlay<small>Coming later</small></span> <span class="tag">Free</span></li>
+            </ul>
           </article>
-          <article class="feature">
-            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18" /><path d="m7 15 4-4 3 3 5-6" /></svg></div>
-            <h3>Pace and splits</h3>
-            <p>Time, distance, current pace and estimated finish while you run. Kilometre splits when you're done.</p>
+
+          <article class="group">
+            <div class="group-head">
+              <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2" /></svg></div>
+              <h3>Run tracking</h3>
+            </div>
+            <ul>
+              <li><span>Live stats<small>Time, distance, pace, remaining, finish estimate</small></span> <span class="tag">Free</span></li>
+              <li>Kilometre splits <span class="tag">Free</span></li>
+              <li>Run history logbook <span class="tag">Free</span></li>
+              <li>Free run without a route <span class="tag">Free</span></li>
+              <li>Save a free run as a route <span class="tag">Free</span></li>
+              <li><span>Heart rate, cadence, calories<small>Coming with Health</small></span> <span class="tag">Free</span></li>
+              <li>Share image with stats <span class="tag">Free</span></li>
+              <li>Interval training <span class="tag premium">Premium</span></li>
+              <li>Live tracking link for friends <span class="tag premium">Premium</span></li>
+              <li>Treadmill mode with street view <span class="tag premium">Premium</span></li>
+            </ul>
           </article>
-          <article class="feature">
-            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z" /><circle cx="12" cy="9" r="2.5" /></svg></div>
-            <h3>Local stories</h3>
-            <p>Routes talk about what you're passing, from the Serpentine to the Prime Meridian.</p>
+
+          <article class="group">
+            <div class="group-head">
+              <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" /></svg></div>
+              <h3>Create</h3>
+            </div>
+            <ul>
+              <li><span>Tap to draw, snaps to paths<small>Monthly cap on Free</small></span> <span class="tag">Free</span></li>
+              <li>Unlimited routes <span class="tag premium">Premium</span></li>
+              <li>Custom voice messages <span class="tag">Free</span></li>
+              <li>GPX import <span class="tag">Free</span></li>
+              <li>Undo, redo, drag points <span class="tag">Free</span></li>
+              <li>Out and back, reverse, complete loop <span class="tag">Free</span></li>
+              <li>Points of interest palette <span class="tag">Free</span></li>
+              <li><span>Topo and satellite map layers<small>Standard map is free</small></span> <span class="tag premium">Premium</span></li>
+              <li>Import from Strava <span class="tag premium">Premium</span></li>
+              <li>Photos, logo and audio on routes <span class="tag creator">Creator</span></li>
+            </ul>
           </article>
-          <article class="feature">
-            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="m7 10 5 5 5-5" /><path d="M12 15V3" /></svg></div>
-            <h3>GPX in and out</h3>
-            <p>Bring in a route from your watch or another app, or take a JustinGo route anywhere.</p>
+
+          <article class="group">
+            <div class="group-head">
+              <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" /><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" /><path d="M4 22h16" /><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" /><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" /><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" /></svg></div>
+              <h3>Community &amp; challenges</h3>
+            </div>
+            <ul>
+              <li>Groups and run clubs, public or private <span class="tag">Free</span></li>
+              <li>Challenges with shared goals <span class="tag">Free</span></li>
+              <li><span>Leaderboards<small>Single route, cumulative, series</small></span> <span class="tag">Free</span></li>
+              <li>Digital badges and medals <span class="tag">Free</span></li>
+              <li>Virtual races and race submission <span class="tag">Free</span></li>
+            </ul>
+          </article>
+
+          <article class="group span2">
+            <div class="group-head">
+              <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 17H7A5 5 0 0 1 7 7h2" /><path d="M15 7h2a5 5 0 1 1 0 10h-2" /><line x1="8" x2="16" y1="12" y2="12" /></svg></div>
+              <h3>Integrations &amp; account</h3>
+            </div>
+            <ul>
+              <li>Apple Watch standalone app <span class="tag">Free</span></li>
+              <li>Apple Health and Health Connect <span class="tag">Free</span></li>
+              <li>Strava sync and export <span class="tag premium">Premium</span></li>
+              <li><span>Garmin and COROS course export<small>GPX free, TCX with cues on Premium</small></span> <span class="tag">Free</span></li>
+              <li>Sign in with Apple, Google or email <span class="tag">Free</span></li>
+              <li>Units, accessibility, VoiceOver-first design <span class="tag">Free</span></li>
+              <li>Manage plan, delete account <span class="tag">Free</span></li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="integrations" aria-labelledby="integrations-title">
+      <div class="wrap strip">
+        <div>
+          <h2 id="integrations-title">On your wrist and in your apps</h2>
+          <p>Take routes to your watch and send runs where you already keep them.</p>
+        </div>
+        <ul class="chips">
+          <li class="chip"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="6" /><polyline points="12 10 12 12 13 13" /><path d="m16.13 7.66-.81-4.05a2 2 0 0 0-2-1.61h-2.68a2 2 0 0 0-2 1.61l-.78 4.05" /><path d="m7.88 16.36.8 4a2 2 0 0 0 2 1.61h2.72a2 2 0 0 0 2-1.61l.81-4.05" /></svg>Apple Watch <span class="tag">Free</span></li>
+          <li class="chip"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /></svg>Apple Health <span class="tag">Free</span></li>
+          <li class="chip"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m17 2 4 4-4 4" /><path d="M3 11v-1a4 4 0 0 1 4-4h14" /><path d="m7 22-4-4 4-4" /><path d="M21 13v1a4 4 0 0 1-4 4H3" /></svg>Strava <span class="tag premium">Premium</span></li>
+          <li class="chip"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="m7 10 5 5 5-5" /><path d="M12 15V3" /></svg>Garmin / COROS export <span class="tag">Free</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="cities" aria-labelledby="cities-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="kicker">City guides</p>
+          <h2 id="cities-title">London, area by area</h2>
+          <p>Popular routes, neighbourhoods, races and runner-friendly hotels, gathered into one guide per part of town.</p>
+        </div>
+        <div class="cities">
+          <article class="city">
+            <figure class="ph wide" role="img" aria-label="Placeholder image: Hyde Park path at sunrise"><svg aria-hidden="true"><use href="#i-image" /></svg><figcaption aria-hidden="true">Hyde Park photo</figcaption></figure>
+            <h3>Central</h3>
+            <p>Royal parks, the Serpentine and early-morning laps past the landmarks.</p>
+            <button type="button" class="btn secondary small" title="Demo: not connected yet" aria-describedby="demo-hint">Open guide</button>
+          </article>
+          <article class="city">
+            <figure class="ph wide" role="img" aria-label="Placeholder image: Hampstead Heath hilltop view"><svg aria-hidden="true"><use href="#i-image" /></svg><figcaption aria-hidden="true">Hampstead Heath photo</figcaption></figure>
+            <h3>North</h3>
+            <p>Heath hills, Regent's Canal towpath and wooded trails.</p>
+            <button type="button" class="btn secondary small" title="Demo: not connected yet" aria-describedby="demo-hint">Open guide</button>
+          </article>
+          <article class="city">
+            <figure class="ph wide" role="img" aria-label="Placeholder image: Olympic Park running track"><svg aria-hidden="true"><use href="#i-image" /></svg><figcaption aria-hidden="true">Olympic Park photo</figcaption></figure>
+            <h3>East</h3>
+            <p>Olympic Park loops, Victoria Park and the River Lea.</p>
+            <button type="button" class="btn secondary small" title="Demo: not connected yet" aria-describedby="demo-hint">Open guide</button>
+          </article>
+          <article class="city">
+            <figure class="ph wide" role="img" aria-label="Placeholder image: Greenwich Park view over the city"><svg aria-hidden="true"><use href="#i-image" /></svg><figcaption aria-hidden="true">Greenwich Park photo</figcaption></figure>
+            <h3>South</h3>
+            <p>Greenwich and the Prime Meridian, commons and Crystal Palace.</p>
+            <button type="button" class="btn secondary small" title="Demo: not connected yet" aria-describedby="demo-hint">Open guide</button>
+          </article>
+          <article class="city">
+            <figure class="ph wide" role="img" aria-label="Placeholder image: deer in Richmond Park"><svg aria-hidden="true"><use href="#i-image" /></svg><figcaption aria-hidden="true">Richmond Park photo</figcaption></figure>
+            <h3>West</h3>
+            <p>Richmond Park, Kew and long, quiet riverside miles.</p>
+            <button type="button" class="btn secondary small" title="Demo: not connected yet" aria-describedby="demo-hint">Open guide</button>
+          </article>
+          <article class="city">
+            <figure class="ph wide" role="img" aria-label="Placeholder image: Thames Path at dusk"><svg aria-hidden="true"><use href="#i-image" /></svg><figcaption aria-hidden="true">Thames Path photo</figcaption></figure>
+            <h3>Thames</h3>
+            <p>Bridge-to-bridge loops and point-to-point runs along the river.</p>
+            <button type="button" class="btn secondary small" title="Demo: not connected yet" aria-describedby="demo-hint">Open guide</button>
           </article>
         </div>
       </div>
@@ -286,13 +543,223 @@
           <p>Every route checked and voiced, from a quick 3 km loop to nearly 19 km round Richmond Park.</p>
         </div>
         <div class="routes" id="route-list" role="list"></div>
-        <p class="routes-note">Plus any route you draw yourself.</p>
+        <p class="routes-note">Plus any route you draw yourself. <a href="/app/">Browse them all in the app</a>.</p>
       </div>
     </section>
 
-    <section class="band" aria-labelledby="band-title">
+    <section id="pricing" aria-labelledby="pricing-title">
       <div class="wrap">
-        <h2 id="band-title">Your next run<br />starts here</h2>
+        <div class="section-head">
+          <p class="kicker">Plans</p>
+          <h2 id="pricing-title">Free to run. <mark>More if you want it.</mark></h2>
+          <p>No ads on any plan. Voice navigation and every route stay free.</p>
+        </div>
+        <div class="plans">
+          <article class="plan">
+            <div>
+              <h3>Free</h3>
+              <p class="for">For everyone</p>
+            </div>
+            <div>
+              <p class="price">£0</p>
+              <p class="price-alt">Forever</p>
+            </div>
+            <ul class="ticks">
+              <li><svg aria-hidden="true"><use href="#i-check" /></svg>Turn-by-turn voice navigation</li>
+              <li><svg aria-hidden="true"><use href="#i-check" /></svg>Every route in the library</li>
+              <li><svg aria-hidden="true"><use href="#i-check" /></svg>Create routes, with a monthly cap</li>
+              <li><svg aria-hidden="true"><use href="#i-check" /></svg>Run log, splits and GPX export</li>
+              <li><svg aria-hidden="true"><use href="#i-check" /></svg>Groups, challenges and badges</li>
+            </ul>
+            <button type="button" class="btn secondary block" title="Demo: not connected yet" aria-describedby="demo-hint">Start free</button>
+          </article>
+
+          <article class="plan featured">
+            <p class="badge">Most popular</p>
+            <div>
+              <h3>Premium</h3>
+              <p class="for">For runners who want more</p>
+            </div>
+            <div>
+              <p class="price">£4.99<small>/ month</small></p>
+              <p class="price-alt">or £44.99 a year, or £99 lifetime</p>
+            </div>
+            <ul class="ticks">
+              <li><svg aria-hidden="true"><use href="#i-check" /></svg>Everything in Free</li>
+              <li><svg aria-hidden="true"><use href="#i-check" /></svg>Topo and satellite maps, 3D flyover</li>
+              <li><svg aria-hidden="true"><use href="#i-check" /></svg>Unlimited route creation</li>
+              <li><svg aria-hidden="true"><use href="#i-check" /></svg>Live tracking link and interval training</li>
+              <li><svg aria-hidden="true"><use href="#i-check" /></svg>Strava sync, TCX with turn cues</li>
+              <li><svg aria-hidden="true"><use href="#i-check" /></svg>Enhanced voices</li>
+            </ul>
+            <button type="button" class="btn block" title="Demo: not connected yet" aria-describedby="demo-hint">Go Premium</button>
+          </article>
+
+          <article class="plan">
+            <div>
+              <h3>Creator</h3>
+              <p class="for">For clubs, coaches, races and publishers</p>
+            </div>
+            <div>
+              <p class="price">£16.99<small>/ month</small></p>
+              <p class="price-alt">or £169 a year. Includes Premium</p>
+            </div>
+            <ul class="ticks">
+              <li><svg aria-hidden="true"><use href="#i-check" /></svg>Everything in Premium</li>
+              <li><svg aria-hidden="true"><use href="#i-check" /></svg>Photos, logo and audio on your routes</li>
+              <li><svg aria-hidden="true"><use href="#i-check" /></svg>Pre-recorded audio clips</li>
+              <li><svg aria-hidden="true"><use href="#i-check" /></svg>Branded groups for your club</li>
+            </ul>
+            <button type="button" class="btn black block" title="Demo: not connected yet" aria-describedby="demo-hint">Become a creator</button>
+          </article>
+        </div>
+        <p class="preview-note">Everything is free during the preview</p>
+      </div>
+    </section>
+
+    <section id="business" aria-labelledby="business-title">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="kicker">For business</p>
+          <h2 id="business-title">Put your place on the running map</h2>
+          <p>Voice-guided routes for guests, participants, visitors and teams, with your name on them.</p>
+        </div>
+        <div class="biz">
+          <article class="seg major">
+            <figure class="ph" role="img" aria-label="Placeholder image: hotel lobby with runners heading out"><svg aria-hidden="true"><use href="#i-image" /></svg><figcaption aria-hidden="true">Hotel lobby photo</figcaption></figure>
+            <div class="seg-body">
+              <h3>Hotels &amp; hospitality</h3>
+              <p class="pitch">Give every guest a run that starts at your front door and talks them round the neighbourhood.</p>
+              <ul class="ticks">
+                <li><svg aria-hidden="true"><use href="#i-check" /></svg>Voice-guided routes from the lobby, and staff-narrated walks</li>
+                <li><svg aria-hidden="true"><use href="#i-check" /></svg>Brand page, QR cards and a digital hotel guide</li>
+                <li><svg aria-hidden="true"><use href="#i-check" /></svg>Concierge mapping tool for your team</li>
+                <li><svg aria-hidden="true"><use href="#i-check" /></svg>Listing in the runner-friendly hotel finder</li>
+                <li><svg aria-hidden="true"><use href="#i-check" /></svg>Usage analytics</li>
+              </ul>
+              <p class="meta">Starter trial, then an annual programme.</p>
+              <button type="button" class="btn black" title="Demo: not connected yet" aria-describedby="demo-hint">Book a demo</button>
+            </div>
+          </article>
+
+          <article class="seg major">
+            <figure class="ph" role="img" aria-label="Placeholder image: race start line crowd"><svg aria-hidden="true"><use href="#i-image" /></svg><figcaption aria-hidden="true">Race start line photo</figcaption></figure>
+            <div class="seg-body">
+              <h3>Races &amp; events</h3>
+              <p class="pitch">Guide runners round your course, keep spectators on their dots and give sponsors a voice.</p>
+              <ul class="ticks">
+                <li><svg aria-hidden="true"><use href="#i-check" /></svg>Course maps and embeds for your website</li>
+                <li><svg aria-hidden="true"><use href="#i-check" /></svg>Audio course guidance with sponsor messages</li>
+                <li><svg aria-hidden="true"><use href="#i-check" /></svg>Live tracking for spectators</li>
+                <li><svg aria-hidden="true"><use href="#i-check" /></svg>Leaderboards, virtual races and badges</li>
+                <li><svg aria-hidden="true"><use href="#i-check" /></svg>GPS timing and participant how-tos</li>
+              </ul>
+              <p class="meta">Self-serve for free, or paid setup.</p>
+              <button type="button" class="btn black" title="Demo: not connected yet" aria-describedby="demo-hint">Book a demo</button>
+            </div>
+          </article>
+
+          <article class="seg">
+            <figure class="ph" role="img" aria-label="Placeholder image: runners on a city heritage trail"><svg aria-hidden="true"><use href="#i-image" /></svg><figcaption aria-hidden="true">Heritage trail photo</figcaption></figure>
+            <div class="seg-body">
+              <h3>Tourism &amp; destinations</h3>
+              <p class="pitch">Show visitors your city at running pace.</p>
+              <ul class="ticks">
+                <li><svg aria-hidden="true"><use href="#i-check" /></svg>City guides</li>
+                <li><svg aria-hidden="true"><use href="#i-check" /></svg>Themed trails and audio tours</li>
+                <li><svg aria-hidden="true"><use href="#i-check" /></svg>Challenge series</li>
+              </ul>
+              <button type="button" class="btn secondary small" title="Demo: not connected yet" aria-describedby="demo-hint">Book a demo</button>
+            </div>
+          </article>
+
+          <article class="seg">
+            <figure class="ph" role="img" aria-label="Placeholder image: office team running at lunchtime"><svg aria-hidden="true"><use href="#i-image" /></svg><figcaption aria-hidden="true">Team run photo</figcaption></figure>
+            <div class="seg-body">
+              <h3>Corporate wellness</h3>
+              <p class="pitch">Get teams moving together, wherever they work.</p>
+              <ul class="ticks">
+                <li><svg aria-hidden="true"><use href="#i-check" /></svg>Team challenges</li>
+                <li><svg aria-hidden="true"><use href="#i-check" /></svg>Virtual races</li>
+                <li><svg aria-hidden="true"><use href="#i-check" /></svg>Leaderboards</li>
+              </ul>
+              <button type="button" class="btn secondary small" title="Demo: not connected yet" aria-describedby="demo-hint">Book a demo</button>
+            </div>
+          </article>
+
+          <article class="seg">
+            <figure class="ph" role="img" aria-label="Placeholder image: branded running kit on a route"><svg aria-hidden="true"><use href="#i-image" /></svg><figcaption aria-hidden="true">Brand activation photo</figcaption></figure>
+            <div class="seg-body">
+              <h3>Brands &amp; sponsors</h3>
+              <p class="pitch">Be heard mid-run, not scrolled past.</p>
+              <ul class="ticks">
+                <li><svg aria-hidden="true"><use href="#i-check" /></svg>Audio activations along routes</li>
+                <li><svg aria-hidden="true"><use href="#i-check" /></svg>Branded routes</li>
+                <li><svg aria-hidden="true"><use href="#i-check" /></svg>Share images and badges</li>
+              </ul>
+              <p class="meta">Usually alongside a race or hotel.</p>
+              <button type="button" class="btn secondary small" title="Demo: not connected yet" aria-describedby="demo-hint">Book a demo</button>
+            </div>
+          </article>
+
+          <article class="seg">
+            <figure class="ph" role="img" aria-label="Placeholder image: run club group photo"><svg aria-hidden="true"><use href="#i-image" /></svg><figcaption aria-hidden="true">Run club photo</figcaption></figure>
+            <div class="seg-body">
+              <h3>Clubs &amp; coaches</h3>
+              <p class="pitch">Publish your routes and run your group in one place.</p>
+              <ul class="ticks">
+                <li><svg aria-hidden="true"><use href="#i-check" /></svg>Creator plan for publishing routes</li>
+                <li><svg aria-hidden="true"><use href="#i-check" /></svg>Branded and private groups</li>
+                <li><svg aria-hidden="true"><use href="#i-check" /></svg>Your own audio clips on routes</li>
+                <li><svg aria-hidden="true"><use href="#i-check" /></svg>Club challenges and leaderboards</li>
+              </ul>
+              <button type="button" class="btn secondary small" title="Demo: not connected yet" aria-describedby="demo-hint">Book a demo</button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" aria-labelledby="faq-title">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="faq-title">Questions</h2>
+        </div>
+        <div class="faq">
+          <details>
+            <summary>Is JustinGo free?</summary>
+            <p>Yes. Everything is free during the preview. After that, voice navigation, every route and route creation stay free, and Premium and Creator add extras for runners, clubs and races who want more.</p>
+          </details>
+          <details>
+            <summary>Which phones does it work on?</summary>
+            <p>Right now it runs in the browser on iPhone and Android, so you can try it today without installing anything. Dedicated iPhone and Android apps are coming soon, with Apple Watch to follow.</p>
+          </details>
+          <details>
+            <summary>Does it work offline?</summary>
+            <p>Download for offline is on the way and will be free. In the preview, open your route while you have signal before you set off.</p>
+          </details>
+          <details>
+            <summary>Can I make my own routes?</summary>
+            <p>Yes. Tap points on the map and the route snaps to real paths, then add your own voice messages anywhere along it. You can also import a GPX file. Free includes a monthly number of routes, Premium makes it unlimited.</p>
+          </details>
+          <details>
+            <summary>How do hotels and races get started?</summary>
+            <p>Book a demo and we'll map your first routes with you. Hotels begin with a starter trial, then move to an annual programme. Races can set up for free themselves, or have us do the setup.</p>
+          </details>
+          <details>
+            <summary>What happens to my location?</summary>
+            <p>Your location is used to guide you along the route. In the preview, your routes and run history are stored on your own device. Live tracking will only share your position when you switch it on and send the link.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section id="get-started" class="band dark" aria-labelledby="band-title">
+      <div class="wrap">
+        <div>
+          <h2 id="band-title">Your next run<br /><span>starts here</span></h2>
+          <p>Free in your browser. No sign-up.</p>
+        </div>
         <a class="btn" href="/app/">Open JustinGo</a>
       </div>
     </section>
@@ -300,7 +767,7 @@
 
   <footer>
     <div class="wrap">
-      <a class="brand" href="/" style="font-size:24px">Justin<span>Go</span></a>
+      <a class="brand" href="/">Justin<span>Go</span></a>
       <p>Map data © OpenStreetMap contributors · Map tiles © CARTO</p>
       <p>© 2026 JustinGo</p>
     </div>

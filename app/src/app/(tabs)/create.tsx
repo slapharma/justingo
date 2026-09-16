@@ -1,11 +1,12 @@
 import { router } from 'expo-router';
-import { MessageSquare, PenLine, Repeat, Save, Trash, Undo2, Upload, X } from '../../icons';
+import { Activity, ArrowLeftRight, Camera, Layers, MapPin as MapPinIcon, MessageSquare, PenLine, Redo2, Repeat, RotateCcw, Save, Trash, Undo2, Upload, X } from '../../icons';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import RouteMap from '../../components/RouteMap';
 import type { MapLine, MapPin } from '../../components/RouteMap.types';
-import { Body, Button, Card, Heading, IconButton, Stat } from '../../components/ui';
+import { DemoButton, Rail } from '../../components/demo';
+import { Body, Button, Heading, IconButton, Stat } from '../../components/ui';
 import { assembleRoute, ELEVATION_SAMPLES, samplePath } from '../../core/build';
 import { cumulativeDistances, pathLength, project } from '../../core/geo';
 import { parseGpx } from '../../core/gpx';
@@ -182,7 +183,7 @@ export default function Create() {
       </View>
 
       <View style={{ flex: 1 }}>
-        <RouteMap key={theme.scheme} lines={lines} pins={pins} fitKey={imported ? 'imported' : 'draw'} initialView={START_VIEW} onPress={onMapPress} style={StyleSheet.absoluteFill} label="Route drawing map. Tap to add points." />
+        <RouteMap lines={lines} pins={pins} fitKey={imported ? 'imported' : 'draw'} initialView={START_VIEW} onPress={onMapPress} style={StyleSheet.absoluteFill} label="Route drawing map. Tap to add points." />
         <View style={styles.tools}>
           <IconButton icon={PenLine} label="Draw mode" active={mode === 'draw'} onPress={() => setMode('draw')} />
           <IconButton icon={MessageSquare} label="Add voice message mode" active={mode === 'message'} onPress={() => setMode('message')} />
@@ -237,6 +238,16 @@ export default function Create() {
           </View>
         ) : (
           <ScrollView contentContainerStyle={{ gap: space.md }} keyboardShouldPersistTaps="handled">
+            {/* More creation tools: on screen for the demo, not wired yet. */}
+            <Rail>
+              <DemoButton label="Redo" icon={Redo2} />
+              <DemoButton label="Out and back" icon={ArrowLeftRight} />
+              <DemoButton label="Reverse" icon={RotateCcw} />
+              <DemoButton label="Add POI" icon={MapPinIcon} />
+              <DemoButton label="Map layers" icon={Layers} tier="premium" />
+              <DemoButton label="From Strava" icon={Activity} tier="premium" />
+              <DemoButton label="Photos and audio" icon={Camera} tier="creator" />
+            </Rail>
             <View style={{ flexDirection: 'row', gap: space.md }}>
               <Stat label="Distance" value={km(distance, 2)} unit="km" />
               <Stat label="Turns" value={String(turns.length)} />

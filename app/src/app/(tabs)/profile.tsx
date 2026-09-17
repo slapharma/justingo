@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { DemoButton, ListRow, Placeholder, SectionTitle, Segmented } from '../../components/demo';
+import { WellnessGrid } from '../../components/health';
+import { HEALTH_SOURCES } from '../../healthDemo';
 import { Card, Heading } from '../../components/ui';
 import { km } from '../../format';
 import {
@@ -67,9 +69,14 @@ export default function Profile() {
       </Card>
       <ListRow icon={Crown} title="Plans and pricing" detail="Free, Premium and Creator" onPress={() => router.push('/premium')} />
 
+      <SectionTitle title="Health" action="Demo" />
+      <WellnessGrid />
+      <ListRow icon={HeartPulse} title="Health dashboard" detail="Training status, VO2 max, recovery and your sources" onPress={() => router.push('/health')} />
+      <ListRow icon={Watch} title="Health sources" detail={`Garmin Connect connected · ${HEALTH_SOURCES.length - 1} more available`} onPress={() => router.push('/health')} />
+
       <SectionTitle title="Connected" />
       <ListRow icon={Watch} title="Apple Watch" detail="Guidance and stats on your wrist, phone optional" />
-      <ListRow icon={HeartPulse} title="Apple Health / Health Connect" detail="Save workouts, read heart rate" />
+      <ListRow icon={HeartPulse} title="Apple Health / Health Connect" detail="Save workouts, read heart rate, sleep and HRV" />
       <ListRow icon={Activity} title="Strava" detail="Import routes and segments, upload runs" tier="premium" />
       <ListRow icon={Watch} title="Garmin and COROS" detail="Send routes as GPX or TCX courses" />
 

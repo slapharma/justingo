@@ -4,6 +4,7 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import RouteMap from '../../components/RouteMap';
 import { DemoButton } from '../../components/demo';
+import { RunHealthSection } from '../../components/health';
 import { Badge, Body, Button, Card, EmptyState, Heading, Stat } from '../../components/ui';
 import { date, duration, km, pace } from '../../format';
 import { useRoute, useRuns } from '../../store';
@@ -81,6 +82,8 @@ export default function Summary() {
             </Card>
           </View>
         )}
+
+        <RunHealthSection run={run} />
 
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: space.sm }}>
           <DemoButton label="Share image" icon={Share2} variant="dark" style={{ flexGrow: 1 }} />

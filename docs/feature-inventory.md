@@ -71,7 +71,8 @@ Tiers are JustinGo's proposed tiers (below), not RunGo's. JustinGo is free durin
 | Kilometre splits | Free | Built |
 | Run history (logbook) | Free | Built |
 | Free run without a route | Free | Demo |
-| Heart rate, cadence, calories | Free | Later (native, Health) |
+| Heart rate, cadence, calories, power, training load on the run summary | Free | Demo |
+| Runs synced from your watch, shown in History | Free | Demo |
 | Save a free run as a route | Free | Demo |
 | Interval training | Premium | Demo |
 | Share image with stats | Free | Demo |
@@ -106,7 +107,9 @@ Tiers are JustinGo's proposed tiers (below), not RunGo's. JustinGo is free durin
 | Feature | Tier | Status |
 |---|---|---|
 | Apple Watch standalone app | Free | Demo (later native) |
-| Apple Health / Health Connect | Free | Demo |
+| Apple Health / Health Connect | Free | Demo (later native) |
+| Daily wellness (resting HR, HRV, sleep, steps) and training status dashboard | Free | Demo |
+| Wearable sources: Garmin, COROS, Polar, Suunto, Fitbit, WHOOP, Oura, FIT/TCX/GPX import | Free | Demo (phase 4) |
 | Strava sync and export | Premium | Demo |
 | Garmin / COROS course export (GPX, TCX) | Free / Premium | Demo |
 | Sign in with Apple, Google, email | Free | Demo (phase 4) |

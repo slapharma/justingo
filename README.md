@@ -57,6 +57,16 @@ content so the whole product can be seen before it's built.
   These use placeholder images and invented names, and pressing a demo button does nothing — it has
   no `onPress` handler. Shared demo building blocks live in `app/src/components/demo.tsx`, their
   content in `app/src/demoData.ts`.
+- **Demo (health and wearable data sync):** a `/health` dashboard (daily wellness, training status,
+  connected sources), a "Health data" section on the run summary (heart rate chart, time in zones,
+  cadence, power, calories, training load, aerobic effect, VO2 max, recovery), a "Synced from your
+  watch" list on History with an avg HR line per run, and a Health section on Profile with wellness
+  tiles and links into the dashboard. Every figure is invented and deterministic, seeded from the
+  run's id so the same run always shows the same numbers (`app/src/healthDemo.ts`); nothing is read
+  from a device. Garmin Connect is shown connected, with Apple Health/Watch, Health Connect, COROS,
+  Polar, Suunto, Fitbit, WHOOP and Oura shown as available. Real sync needs the native build
+  (HealthKit, Health Connect) and the phase 4 backend (Garmin and other cloud APIs over OAuth). The
+  website's `#health` section mirrors this as a "coming soon" preview.
 
 The app has five tabs: Discover, Create, Community, History and Profile.
 
@@ -110,7 +120,8 @@ npm test
 This runs `node --test src/core/*.test.ts src/*.test.ts`, covering geometry (`geo.test.ts`), turn
 detection (`turns.test.ts`), cue building and the `NavEngine` state machine (`engine.test.ts`),
 route assembly (`build.test.ts`), GPX import/export (`gpx.test.ts`), OSRM response parsing
-(`osrm.test.ts`), and formatting helpers (`format.test.ts`, `core.test.ts`).
+(`osrm.test.ts`), formatting helpers (`format.test.ts`, `core.test.ts`), and the placeholder health
+data generator (`healthDemo.test.ts`).
 
 ## Build & deploy
 

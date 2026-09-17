@@ -5,7 +5,7 @@
 //   node scripts/build-routes.ts hyde-park-loop     dry run one or more routes by id
 //
 // Each route is a list of waypoints we chose, snapped to footpaths by the OSRM foot router, with
-// elevation from Open-Meteo. The output is committed so the app never calls these services for
+// elevation from OpenTopoData. The output is committed so the app never calls these services for
 // library routes. Re-run only when adding or changing a route; it is polite to the free services.
 import { writeFileSync } from 'node:fs';
 import { routeFromWaypoints } from '../src/core/build.ts';
@@ -29,9 +29,8 @@ const MAX_SNAP_METRES = 75;
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const MAX_ATTEMPTS = 14;
 /**
- * Identifies us to the free services and backs off when they rate-limit. Open-Meteo's limit is
- * hourly, so waits cap at five minutes and keep going for about 45, rather than failing a full
- * rebuild partway through.
+ * Identifies us to the free services and backs off when they rate-limit. Waits cap at five minutes
+ * and keep going for about 40, so a longer limit doesn't fail a full rebuild partway through.
  */
 const politeFetch: typeof fetch = async (input, init) => {
   for (let attempt = 1; ; attempt++) {
@@ -69,7 +68,7 @@ const ids = args.filter((a) => !REGIONS.includes(a));
 const missing = ids.filter((id) => !seen.has(id));
 if (missing.length) throw new Error(`No region or route id ${missing.join(', ')}. Regions: ${REGIONS.join(', ')}`);
 
-// Dry runs check shape only: elevation is skipped (climb shows 0) to spare Open-Meteo's hourly limit.
+// Dry runs check shape only: elevation is skipped (climb shows 0) to spare OpenTopoData's daily limit.
 const writing = !args.length;
 const routes: Route[] = [];
 let warnings = 0;

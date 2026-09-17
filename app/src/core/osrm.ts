@@ -58,7 +58,10 @@ export async function fetchFootRoute(waypoints: LngLat[], fetchImpl: typeof fetc
   return parseOsrm((await res.json()) as OsrmResponse);
 }
 
-/** Elevation at up to 100 points per call from Open-Meteo (Copernicus 90 m DEM). Keyless. */
+/**
+ * Elevation at up to 100 points per call from Open-Meteo (Copernicus 90 m DEM). Keyless and
+ * CORS-enabled, so this is the one the app calls from the browser.
+ */
 export async function fetchElevation(points: LngLat[], fetchImpl: typeof fetch = fetch): Promise<number[]> {
   const out: number[] = [];
   for (let i = 0; i < points.length; i += 100) {
@@ -69,6 +72,41 @@ export async function fetchElevation(points: LngLat[], fetchImpl: typeof fetch =
     if (!res.ok) throw new Error(`Elevation service returned ${res.status}`);
     const json = (await res.json()) as { elevation: number[] };
     out.push(...json.elevation);
+  }
+  return out;
+}
+
+/** EU-DEM 25 m across Europe, falling back to Mapzen's global terrain elsewhere. */
+export const OPEN_TOPO_DATA = 'https://api.opentopodata.org/v1/eudem25m,mapzen';
+
+/**
+ * Elevation from OpenTopoData's public API, for the route builder. Finer than Open-Meteo, and its
+ * limit is daily (1,000 calls) rather than hourly. It sends no CORS headers, so browsers can't use
+ * it. The public API allows 100 points and one call per second, so chunks are spaced out.
+ */
+export async function fetchElevationOpenTopoData(
+  points: LngLat[],
+  fetchImpl: typeof fetch = fetch,
+  pause: (ms: number) => Promise<void> = (ms) => new Promise((r) => setTimeout(r, ms)),
+): Promise<number[]> {
+  const out: number[] = [];
+  for (let i = 0; i < points.length; i += 100) {
+    if (i > 0) await pause(1100);
+    const chunk = points.slice(i, i + 100);
+    const locations = chunk
+      .map(([lng, lat]) => `${lat.toFixed(5)},${lng.toFixed(5)}`)
+      .join('|');
+    const res = await fetchImpl(`${OPEN_TOPO_DATA}?locations=${locations}`);
+    if (!res.ok) throw new Error(`Elevation service returned ${res.status}`);
+    const json = (await res.json()) as { status: string; error?: string; results?: { elevation: number | null }[] };
+    if (json.status !== 'OK' || !json.results) throw new Error(json.error || `Elevation lookup failed (${json.status})`);
+    // A short or long answer would shift every later height along the route without anyone noticing.
+    if (json.results.length !== chunk.length) throw new Error(`Elevation service returned ${json.results.length} heights for ${chunk.length} points`);
+    for (const { elevation } of json.results) {
+      // Null means no dataset covers the point; a silent 0 would invent a cliff in the profile.
+      if (elevation === null) throw new Error('No elevation data for part of this route');
+      out.push(elevation);
+    }
   }
   return out;
 }

@@ -66,9 +66,9 @@ export interface HotelDemo {
 
 export const HOTELS: HotelDemo[] = [
   { id: 'h1', name: 'The Parkside Hotel', area: 'Knightsbridge', routes: '3 routes from the lobby', perks: ['Concierge-narrated 5K', 'Mindful morning walk', 'Juice bar finish'], photo: 'hotel' },
-  { id: 'h2', name: 'Riverside Grand', area: 'South Bank', routes: '2 routes from the lobby', perks: ['Bridges 10K', 'Marathon shakeout run'], photo: 'thames' },
-  { id: 'h3', name: 'Canal House', area: 'King’s Cross', routes: '2 routes from the lobby', perks: ['Towpath 5K', 'Bike tour'], photo: 'tourism' },
-  { id: 'h4', name: 'Hilltop Lodge', area: 'Hampstead', routes: '1 route from the lobby', perks: ['Heath hills loop'], photo: 'north' },
+  { id: 'h2', name: 'Riverside Grand', area: 'South Bank', routes: '2 routes from the lobby', perks: ['Bridges 10K', 'Marathon shakeout run'], photo: 'hotel' },
+  { id: 'h3', name: 'Canal House', area: 'King’s Cross', routes: '2 routes from the lobby', perks: ['Towpath 5K', 'Bike tour'], photo: 'hotel' },
+  { id: 'h4', name: 'Hilltop Lodge', area: 'Hampstead', routes: '1 route from the lobby', perks: ['Heath hills loop'], photo: 'hotel' },
 ];
 
 export const CHALLENGES = [

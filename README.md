@@ -169,10 +169,14 @@ node scripts/build-routes.ts
 ```
 
 Each route is a hand-picked list of waypoints, snapped to real footpaths by the OSRM foot router,
-with elevation added from Open-Meteo and turns detected from the resulting geometry. Pass a region
-name (`london`, `kent`, `sussex`, `surrey`, `hampshire` or `thames-valley`) to dry-run just that
-region's seed file, or one or more route IDs to dry-run just those routes — either way nothing is
-written to the committed file, and elevation is skipped, so climb shows as 0 m:
+with elevation added from OpenTopoData (EU-DEM 25 m across Europe, falling back to Mapzen's global
+terrain) and turns detected from the resulting geometry. This is a different elevation source than
+the in-app Create tab uses (see **Services & attribution** below) — OpenTopoData sends no CORS
+headers, so only the build script, not the browser, can call it. Pass a region name (`london`,
+`kent`, `sussex`, `surrey`, `hampshire` or `thames-valley`) to dry-run just that region's seed file,
+or one or more route IDs to dry-run just those routes — either way nothing is written to the
+committed file, and elevation is skipped, so climb shows as 0 m; this also spares OpenTopoData's
+daily call limit:
 
 ```
 cd C:\dev\justingo\app
@@ -188,7 +192,9 @@ The script warns if a route has a u-turn, or if a waypoint snapped more than 75 
 (likely dropped in a field, lake or garden) — a new or changed route should print zero warnings.
 Only re-run this when adding or changing a route — it calls two free, rate-limited public services,
 so running it needlessly is inconsiderate to them. The script identifies itself with a `User-Agent`
-and backs off on HTTP 429 for up to about 45 minutes, since Open-Meteo's free tier limit is hourly.
+and backs off on HTTP 429, waiting longer after each retry up to a five-minute cap and continuing
+for about 40 minutes in total, so a rate limit on either service doesn't fail a full rebuild
+partway through.
 
 ## Services & attribution
 
@@ -199,7 +205,8 @@ self-hosted alternatives.
 | Service | Used for | Notes |
 |---|---|---|
 | OSRM demo server (`routing.openstreetmap.de`, foot profile) | Snapping waypoints to footpaths, park paths and trails when building routes | Run by FOSSGIS under a fair-use policy — keyless, but not for heavy or commercial use. A production app should move to a paid host (e.g. OpenRouteService) or a self-hosted OSRM instance. |
-| Open-Meteo elevation API | Elevation samples along each route (Copernicus 90 m DEM) | Free tier is for non-commercial use. |
+| OpenTopoData (`api.opentopodata.org`, `eudem25m,mapzen`) | Elevation for the built-in library routes, added by `build-routes.ts` (EU-DEM 25 m across Europe, falling back to Mapzen's global terrain) | Free public API: 100 points per call, 1 call per second, 1,000 calls per day. Data attribution: "Produced using Copernicus data and information funded by the European Union - EU-DEM layers", plus Mapzen terrain. Sends no CORS headers, so it's only reachable from the build script, not the browser. |
+| Open-Meteo elevation API | Elevation for routes drawn or imported in the app's Create tab (Copernicus 90 m DEM) | Free tier is for non-commercial use. Keyless and CORS-enabled, so the app can call it directly from the browser. |
 | CARTO basemaps (`basemaps.cartocdn.com`, Positron style) | Map tiles in the browser preview and app map (via MapLibre GL) | Free tier has usage limits; a production app should move to a paid tile provider (e.g. MapTiler). |
 
 Attribution shown on the site and required by the map data: **© OpenStreetMap contributors, © CARTO**.

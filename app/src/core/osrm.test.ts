@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { fetchElevation, fetchFootRoute, parseOsrm } from './osrm.ts';
+import { fetchElevation, fetchElevationOpenTopoData, fetchFootRoute, parseOsrm } from './osrm.ts';
 import type { LngLat } from './types.ts';
 
 const ORIGIN: LngLat = [-0.1, 51.5];
@@ -91,6 +91,51 @@ describe('fetchElevation', () => {
   it('throws when the elevation service responds with a non-ok status', async () => {
     const fetchImpl = (async () => ({ ok: false, status: 503 }) as Response) as typeof fetch;
     await assert.rejects(fetchElevation([[0, 0]], fetchImpl), /Elevation service returned 503/);
+  });
+});
+
+describe('fetchElevationOpenTopoData', () => {
+  const ok = (results: { elevation: number | null }[]) => ({ ok: true, json: async () => ({ status: 'OK', results }) }) as Response;
+
+  it('sends lat,lng pairs, chunks at 100 with a pause between calls, and keeps order', async () => {
+    const points: LngLat[] = Array.from({ length: 150 }, (_, i) => [-0.1 + i * 0.001, 51.5]);
+    const calls: string[] = [];
+    const pauses: number[] = [];
+    const fetchImpl = (async (url: string) => {
+      calls.push(url);
+      const n = new URL(url).searchParams.get('locations')!.split('|').length;
+      return ok(Array.from({ length: n }, (_, i) => ({ elevation: calls.length * 1000 + i })));
+    }) as typeof fetch;
+
+    const result = await fetchElevationOpenTopoData(points, fetchImpl, async (ms) => {
+      pauses.push(ms);
+    });
+    assert.equal(calls.length, 2);
+    assert.deepEqual(pauses, [1100], 'one pause, between the two calls');
+    assert.ok(calls[0].startsWith('https://api.opentopodata.org/v1/eudem25m,mapzen?locations=51.50000,-0.10000|51.50000,-0.09900|'), calls[0]);
+    assert.equal(result.length, 150);
+    assert.equal(result[99], 1099);
+    assert.equal(result[100], 2000);
+  });
+
+  it('throws rather than inventing a height when a point has no data', async () => {
+    const fetchImpl = (async () => ok([{ elevation: 12 }, { elevation: null }])) as typeof fetch;
+    await assert.rejects(fetchElevationOpenTopoData([[0, 0], [1, 1]], fetchImpl), /No elevation data/);
+  });
+
+  it('throws when the number of heights does not match the points sent', async () => {
+    const fetchImpl = (async () => ok([{ elevation: 12 }])) as typeof fetch;
+    await assert.rejects(fetchElevationOpenTopoData([[0, 0], [1, 1]], fetchImpl), /1 heights for 2 points/);
+  });
+
+  it('throws the service error when the status is not OK', async () => {
+    const fetchImpl = (async () => ({ ok: true, json: async () => ({ status: 'INVALID_REQUEST', error: 'Too many locations' }) }) as Response) as typeof fetch;
+    await assert.rejects(fetchElevationOpenTopoData([[0, 0]], fetchImpl), /Too many locations/);
+  });
+
+  it('throws when the service responds with a non-ok status', async () => {
+    const fetchImpl = (async () => ({ ok: false, status: 429 }) as Response) as typeof fetch;
+    await assert.rejects(fetchElevationOpenTopoData([[0, 0]], fetchImpl), /Elevation service returned 429/);
   });
 });
 

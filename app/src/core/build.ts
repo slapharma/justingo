@@ -1,5 +1,5 @@
 import { ascent, cumulativeDistances, haversine, pointAlong } from './geo.ts';
-import { fetchElevation, fetchFootRoute } from './osrm.ts';
+import { fetchElevationOpenTopoData, fetchFootRoute } from './osrm.ts';
 import { detectTurns, type NamedPoint } from './turns.ts';
 import type { LngLat, Route, VoiceMessage } from './types.ts';
 
@@ -55,6 +55,7 @@ export function assembleRoute(input: RouteInput): Route {
 /**
  * Waypoints in, finished route out: snaps to foot paths, then adds elevation and turns. `snaps` is
  * how far each waypoint moved onto a path, for spotting waypoints dropped in a field or a lake.
+ * Elevation comes from OpenTopoData, as this runs in the route builder, not the browser.
  * With `withElevation` false the route is flat, which saves the elevation service a call when
  * only checking a route's shape.
  */
@@ -66,7 +67,7 @@ export async function routeFromWaypoints(
 ): Promise<{ route: Route; snaps: number[] }> {
   const { path, names, snaps } = await fetchFootRoute(waypoints, fetchImpl);
   const elevation = withElevation
-    ? await fetchElevation(samplePath(path, ELEVATION_SAMPLES), fetchImpl)
+    ? await fetchElevationOpenTopoData(samplePath(path, ELEVATION_SAMPLES), fetchImpl)
     : new Array<number>(ELEVATION_SAMPLES).fill(0);
   return { route: assembleRoute({ ...meta, path, names, elevation }), snaps };
 }

@@ -40,32 +40,37 @@ export default function History() {
             />
           ) : null
         }
-        renderItem={({ item }) => (
-          <Card
-            onPress={() => router.push({ pathname: '/summary/[id]', params: { id: item.id } })}
-            accessibilityLabel={`${item.routeName}, ${date(item.startedAt)}, ${km(item.distanceRun, 2)} kilometres in ${duration(item.elapsedMs)}`}
-            style={styles.card}
-          >
-            <View style={{ flex: 1, gap: 4 }}>
-              <Text style={[styles.date, { color: theme.muted }]}>{date(item.startedAt)}</Text>
-              <Text numberOfLines={1} style={[styles.name, { color: theme.ink }]}>
-                {item.routeName}
-              </Text>
-              <Text style={[styles.stats, { color: theme.ink }]}>
-                {km(item.distanceRun, 2)} km · {duration(item.elapsedMs)} · {pace(item.avgPace)} /km
-              </Text>
-              <View style={styles.hr}>
-                <HeartPulse color={theme.accentText} size={14} />
-                <Text style={[styles.hrText, { color: theme.muted }]}>{demoRunHealth(item).avgHr} bpm avg · demo</Text>
+        renderItem={({ item }) => {
+          const health = demoRunHealth(item);
+          return (
+            <Card
+              onPress={() => router.push({ pathname: '/summary/[id]', params: { id: item.id } })}
+              accessibilityLabel={`${item.routeName}, ${date(item.startedAt)}, ${km(item.distanceRun, 2)} kilometres in ${duration(item.elapsedMs)}`}
+              style={styles.card}
+            >
+              <View style={{ flex: 1, gap: 4 }}>
+                <Text style={[styles.date, { color: theme.muted }]}>{date(item.startedAt)}</Text>
+                <Text numberOfLines={1} style={[styles.name, { color: theme.ink }]}>
+                  {item.routeName}
+                </Text>
+                <Text style={[styles.stats, { color: theme.ink }]}>
+                  {km(item.distanceRun, 2)} km · {duration(item.elapsedMs)} · {pace(item.avgPace)} /km
+                </Text>
+                {health && (
+                  <View style={styles.hr}>
+                    <HeartPulse color={theme.accentText} size={14} />
+                    <Text style={[styles.hrText, { color: theme.muted }]}>{health.avgHr} bpm avg · demo</Text>
+                  </View>
+                )}
+                <View style={{ flexDirection: 'row', gap: 6 }}>
+                  {!item.completed && <Badge label="Ended early" />}
+                  {item.demo && <Badge label="Demo" />}
+                </View>
               </View>
-              <View style={{ flexDirection: 'row', gap: 6 }}>
-                {!item.completed && <Badge label="Ended early" />}
-                {item.demo && <Badge label="Demo" />}
-              </View>
-            </View>
-            <ChevronRight color={theme.muted} size={22} />
-          </Card>
-        )}
+              <ChevronRight color={theme.muted} size={22} />
+            </Card>
+          );
+        }}
       />
     </View>
   );
@@ -79,7 +84,7 @@ function WatchRuns() {
     <View style={{ gap: space.sm, marginBottom: space.md }}>
       <SectionTitle title="Synced from your watch" action="Demo" />
       {WATCH_RUNS.map((w) => (
-        <Card key={w.id} style={styles.card} accessibilityLabel={`${w.name} from ${w.device}`}>
+        <Card key={w.id} style={styles.card}>
           <View style={[styles.watchIcon, { backgroundColor: theme.surfaceAlt }]}>
             <Watch color={theme.ink} size={20} />
           </View>

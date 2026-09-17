@@ -27,7 +27,8 @@ export interface RunHealth {
 
 /** Upper bound (bpm) of zones 1 to 4, for a demo runner with a max heart rate of 190. Zone 5 is above. */
 export const ZONE_LIMITS = [114, 133, 152, 171] as const;
-export const ZONE_NAMES = ['Easy', 'Aerobic', 'Tempo', 'Threshold', 'Maximum'] as const;
+/** Same names as the website's health section, so the preview and the app match. */
+export const ZONE_NAMES = ['Warm-up', 'Easy', 'Aerobic', 'Threshold', 'Maximum'] as const;
 
 export function zoneFor(bpm: number): HeartRateZone {
   const i = ZONE_LIMITS.findIndex((limit) => bpm < limit);
@@ -50,9 +51,12 @@ function seeded(seed: string): () => number {
 
 const HR_SAMPLES = 60;
 const DEVICES_FOR_RUNS = ['Garmin Forerunner 265', 'Apple Watch Series 10', 'COROS Pace 3'];
+/** Runs shorter than this get no health figures: a watch has nothing meaningful to report. */
+export const MIN_HEALTH_MS = 60_000;
 
-/** Invented but plausible health figures for one run. */
-export function demoRunHealth(run: { id: string; elapsedMs: number; distanceRun: number }): RunHealth {
+/** Invented but plausible health figures for one run, or null for a run under a minute. */
+export function demoRunHealth(run: { id: string; elapsedMs: number; distanceRun: number }): RunHealth | null {
+  if (!(run.elapsedMs >= MIN_HEALTH_MS)) return null;
   const rand = seeded(run.id);
   const minutes = Math.max(0, run.elapsedMs) / 60000;
   const km = Math.max(0, run.distanceRun) / 1000;

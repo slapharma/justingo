@@ -110,6 +110,7 @@ export function WellnessGrid() {
 export function RunHealthSection({ run }: { run: { id: string; elapsedMs: number; distanceRun: number } }) {
   const theme = useTheme();
   const h = demoRunHealth(run);
+  if (!h) return null;
   return (
     <View style={{ gap: space.sm }}>
       <View style={styles.titleRow}>

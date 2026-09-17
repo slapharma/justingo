@@ -158,11 +158,13 @@
     .chip { display: inline-flex; align-items: center; gap: 12px; min-height: 56px; padding: 10px 16px; border: 2px solid var(--ink); border-radius: 999px; font-weight: 700; font-size: 17px; line-height: 1.2; }
     .chip .tag { margin-left: 4px; }
 
-    /* Placeholder images */
+    /* Photos (Unsplash) */
     .ph { position: relative; margin: 0; aspect-ratio: 4 / 3; border-radius: 16px; overflow: hidden; display: grid; place-content: center; justify-items: center; gap: 8px; padding: 16px; text-align: center; color: var(--muted); background-color: var(--grey); background-image: repeating-linear-gradient(135deg, transparent 0 14px, rgba(10, 10, 10, 0.045) 14px 16px); border: 1px solid var(--border); }
-    .ph svg { width: 32px; height: 32px; color: #8A8A8A; }
-    .ph figcaption { font-size: 14px; font-weight: 500; line-height: 1.3; }
     .ph.wide { aspect-ratio: 16 / 9; }
+    .ph.photo { display: block; padding: 0; background-image: none; }
+    .ph.photo img, .ph.photo picture { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .ph.photo .credit { position: absolute; right: 8px; bottom: 8px; margin: 0; padding: 3px 8px; border-radius: 6px; background: rgba(10, 10, 10, 0.72); color: #FFFFFF; font-size: 11px; font-weight: 500; line-height: 1.4; }
+    .ph.photo .credit a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 
     /* City guides */
     .cities { display: grid; gap: 16px; }
@@ -497,37 +499,37 @@
         </div>
         <div class="cities">
           <article class="city">
-            <figure class="ph wide" role="img" aria-label="Placeholder image: Hyde Park path at sunrise"><svg aria-hidden="true"><use href="#i-image" /></svg><figcaption aria-hidden="true">Hyde Park photo</figcaption></figure>
+            <figure class="ph photo wide"><img src="https://images.unsplash.com/photo-1560706834-c8b400d29d37?auto=format&amp;fit=crop&amp;q=70&amp;w=800&amp;h=450" srcset="https://images.unsplash.com/photo-1560706834-c8b400d29d37?auto=format&amp;fit=crop&amp;q=70&amp;w=480&amp;h=270 480w, https://images.unsplash.com/photo-1560706834-c8b400d29d37?auto=format&amp;fit=crop&amp;q=70&amp;w=800&amp;h=450 800w, https://images.unsplash.com/photo-1560706834-c8b400d29d37?auto=format&amp;fit=crop&amp;q=70&amp;w=1200&amp;h=675 1200w" sizes="(min-width: 1000px) 360px, (min-width: 640px) 50vw, 100vw" alt="Sunlight through an avenue of trees in a London park" loading="lazy" decoding="async" /><figcaption class="credit">Photo: <a href="https://unsplash.com/@iv2fi?utm_source=justingo&amp;utm_medium=referral">V2F</a> / <a href="https://unsplash.com/photos/a-line-of-trees-and-sunlight-GGSfZJmWd6Q?utm_source=justingo&amp;utm_medium=referral">Unsplash</a></figcaption></figure>
             <h3>Central</h3>
             <p>Royal parks, the Serpentine and early-morning laps past the landmarks.</p>
             <button type="button" class="btn secondary small" title="Demo: not connected yet" aria-describedby="demo-hint">Open guide</button>
           </article>
           <article class="city">
-            <figure class="ph wide" role="img" aria-label="Placeholder image: Hampstead Heath hilltop view"><svg aria-hidden="true"><use href="#i-image" /></svg><figcaption aria-hidden="true">Hampstead Heath photo</figcaption></figure>
+            <figure class="ph photo wide"><img src="https://images.unsplash.com/photo-1723249882680-e7d99144d7c2?auto=format&amp;fit=crop&amp;crop=focalpoint&amp;fp-y=0.75&amp;q=70&amp;w=800&amp;h=450" srcset="https://images.unsplash.com/photo-1723249882680-e7d99144d7c2?auto=format&amp;fit=crop&amp;crop=focalpoint&amp;fp-y=0.75&amp;q=70&amp;w=480&amp;h=270 480w, https://images.unsplash.com/photo-1723249882680-e7d99144d7c2?auto=format&amp;fit=crop&amp;crop=focalpoint&amp;fp-y=0.75&amp;q=70&amp;w=800&amp;h=450 800w, https://images.unsplash.com/photo-1723249882680-e7d99144d7c2?auto=format&amp;fit=crop&amp;crop=focalpoint&amp;fp-y=0.75&amp;q=70&amp;w=1200&amp;h=675 1200w" sizes="(min-width: 1000px) 360px, (min-width: 640px) 50vw, 100vw" alt="Two people on a bench looking across the heath" loading="lazy" decoding="async" /><figcaption class="credit">Photo: <a href="https://unsplash.com/@morannge?utm_source=justingo&amp;utm_medium=referral">ivan malyi</a> / <a href="https://unsplash.com/photos/two-people-sitting-on-a-bench-in-a-field--uqBgLmLPWM?utm_source=justingo&amp;utm_medium=referral">Unsplash</a></figcaption></figure>
             <h3>North</h3>
             <p>Heath hills, Regent's Canal towpath and wooded trails.</p>
             <button type="button" class="btn secondary small" title="Demo: not connected yet" aria-describedby="demo-hint">Open guide</button>
           </article>
           <article class="city">
-            <figure class="ph wide" role="img" aria-label="Placeholder image: Olympic Park running track"><svg aria-hidden="true"><use href="#i-image" /></svg><figcaption aria-hidden="true">Olympic Park photo</figcaption></figure>
+            <figure class="ph photo wide"><img src="https://images.unsplash.com/photo-1559497353-d304de9f3647?auto=format&amp;fit=crop&amp;q=70&amp;w=800&amp;h=450" srcset="https://images.unsplash.com/photo-1559497353-d304de9f3647?auto=format&amp;fit=crop&amp;q=70&amp;w=480&amp;h=270 480w, https://images.unsplash.com/photo-1559497353-d304de9f3647?auto=format&amp;fit=crop&amp;q=70&amp;w=800&amp;h=450 800w, https://images.unsplash.com/photo-1559497353-d304de9f3647?auto=format&amp;fit=crop&amp;q=70&amp;w=1200&amp;h=675 1200w" sizes="(min-width: 1000px) 360px, (min-width: 640px) 50vw, 100vw" alt="The red Orbit tower in Queen Elizabeth Olympic Park" loading="lazy" decoding="async" /><figcaption class="credit">Photo: <a href="https://unsplash.com/@mikeballet?utm_source=justingo&amp;utm_medium=referral">Tom Wheatley</a> / <a href="https://unsplash.com/photos/white-and-red-tower-sqVnnuKD-Zw?utm_source=justingo&amp;utm_medium=referral">Unsplash</a></figcaption></figure>
             <h3>East</h3>
             <p>Olympic Park loops, Victoria Park and the River Lea.</p>
             <button type="button" class="btn secondary small" title="Demo: not connected yet" aria-describedby="demo-hint">Open guide</button>
           </article>
           <article class="city">
-            <figure class="ph wide" role="img" aria-label="Placeholder image: Greenwich Park view over the city"><svg aria-hidden="true"><use href="#i-image" /></svg><figcaption aria-hidden="true">Greenwich Park photo</figcaption></figure>
+            <figure class="ph photo wide"><img src="https://images.unsplash.com/photo-1642582466531-92118d16f5df?auto=format&amp;fit=crop&amp;q=70&amp;w=800&amp;h=450" srcset="https://images.unsplash.com/photo-1642582466531-92118d16f5df?auto=format&amp;fit=crop&amp;q=70&amp;w=480&amp;h=270 480w, https://images.unsplash.com/photo-1642582466531-92118d16f5df?auto=format&amp;fit=crop&amp;q=70&amp;w=800&amp;h=450 800w, https://images.unsplash.com/photo-1642582466531-92118d16f5df?auto=format&amp;fit=crop&amp;q=70&amp;w=1200&amp;h=675 1200w" sizes="(min-width: 1000px) 360px, (min-width: 640px) 50vw, 100vw" alt="View from Greenwich Park across to the Canary Wharf skyline" loading="lazy" decoding="async" /><figcaption class="credit">Photo: <a href="https://unsplash.com/@zeynepelifko?utm_source=justingo&amp;utm_medium=referral">zeynep elif ozdemir</a> / <a href="https://unsplash.com/photos/a-view-of-a-city-from-a-distance-9GhOPB2Teus?utm_source=justingo&amp;utm_medium=referral">Unsplash</a></figcaption></figure>
             <h3>South</h3>
             <p>Greenwich and the Prime Meridian, commons and Crystal Palace.</p>
             <button type="button" class="btn secondary small" title="Demo: not connected yet" aria-describedby="demo-hint">Open guide</button>
           </article>
           <article class="city">
-            <figure class="ph wide" role="img" aria-label="Placeholder image: deer in Richmond Park"><svg aria-hidden="true"><use href="#i-image" /></svg><figcaption aria-hidden="true">Richmond Park photo</figcaption></figure>
+            <figure class="ph photo wide"><img src="https://images.unsplash.com/photo-1581549072287-436a6fe3880f?auto=format&amp;fit=crop&amp;q=70&amp;w=800&amp;h=450" srcset="https://images.unsplash.com/photo-1581549072287-436a6fe3880f?auto=format&amp;fit=crop&amp;q=70&amp;w=480&amp;h=270 480w, https://images.unsplash.com/photo-1581549072287-436a6fe3880f?auto=format&amp;fit=crop&amp;q=70&amp;w=800&amp;h=450 800w, https://images.unsplash.com/photo-1581549072287-436a6fe3880f?auto=format&amp;fit=crop&amp;q=70&amp;w=1200&amp;h=675 1200w" sizes="(min-width: 1000px) 360px, (min-width: 640px) 50vw, 100vw" alt="Deer grazing in a London park" loading="lazy" decoding="async" /><figcaption class="credit">Photo: <a href="https://unsplash.com/@zoltantasi?utm_source=justingo&amp;utm_medium=referral">Zoltan Tasi</a> / <a href="https://unsplash.com/photos/brown-and-white-deer-on-green-grass-field-during-daytime-E3G06Av4jAU?utm_source=justingo&amp;utm_medium=referral">Unsplash</a></figcaption></figure>
             <h3>West</h3>
             <p>Richmond Park, Kew and long, quiet riverside miles.</p>
             <button type="button" class="btn secondary small" title="Demo: not connected yet" aria-describedby="demo-hint">Open guide</button>
           </article>
           <article class="city">
-            <figure class="ph wide" role="img" aria-label="Placeholder image: Thames Path at dusk"><svg aria-hidden="true"><use href="#i-image" /></svg><figcaption aria-hidden="true">Thames Path photo</figcaption></figure>
+            <figure class="ph photo wide"><img src="https://images.unsplash.com/photo-1765924362722-c73be2a1c076?auto=format&amp;fit=crop&amp;q=70&amp;w=800&amp;h=450" srcset="https://images.unsplash.com/photo-1765924362722-c73be2a1c076?auto=format&amp;fit=crop&amp;q=70&amp;w=480&amp;h=270 480w, https://images.unsplash.com/photo-1765924362722-c73be2a1c076?auto=format&amp;fit=crop&amp;q=70&amp;w=800&amp;h=450 800w, https://images.unsplash.com/photo-1765924362722-c73be2a1c076?auto=format&amp;fit=crop&amp;q=70&amp;w=1200&amp;h=675 1200w" sizes="(min-width: 1000px) 360px, (min-width: 640px) 50vw, 100vw" alt="The Thames Embankment with the London skyline" loading="lazy" decoding="async" /><figcaption class="credit">Photo: <a href="https://unsplash.com/@philippeb?utm_source=justingo&amp;utm_medium=referral">Philippe BONTEMPS</a> / <a href="https://unsplash.com/photos/river-thames-embankment-with-london-skyline-and-bare-trees-rcOalLch-Xs?utm_source=justingo&amp;utm_medium=referral">Unsplash</a></figcaption></figure>
             <h3>Thames</h3>
             <p>Bridge-to-bridge loops and point-to-point runs along the river.</p>
             <button type="button" class="btn secondary small" title="Demo: not connected yet" aria-describedby="demo-hint">Open guide</button>
@@ -626,7 +628,7 @@
         </div>
         <div class="biz">
           <article class="seg major">
-            <figure class="ph" role="img" aria-label="Placeholder image: hotel lobby with runners heading out"><svg aria-hidden="true"><use href="#i-image" /></svg><figcaption aria-hidden="true">Hotel lobby photo</figcaption></figure>
+            <figure class="ph photo"><picture><source media="(min-width: 1040px)" srcset="https://images.unsplash.com/photo-1637730826933-54287f79e1c3?auto=format&amp;fit=crop&amp;q=70&amp;w=240&amp;h=600 240w, https://images.unsplash.com/photo-1637730826933-54287f79e1c3?auto=format&amp;fit=crop&amp;q=70&amp;w=480&amp;h=1200 480w" sizes="225px" /><img src="https://images.unsplash.com/photo-1637730826933-54287f79e1c3?auto=format&amp;fit=crop&amp;q=70&amp;w=800&amp;h=600" srcset="https://images.unsplash.com/photo-1637730826933-54287f79e1c3?auto=format&amp;fit=crop&amp;q=70&amp;w=480&amp;h=360 480w, https://images.unsplash.com/photo-1637730826933-54287f79e1c3?auto=format&amp;fit=crop&amp;q=70&amp;w=800&amp;h=600 800w, https://images.unsplash.com/photo-1637730826933-54287f79e1c3?auto=format&amp;fit=crop&amp;q=70&amp;w=1300&amp;h=975 1300w" sizes="(min-width: 1040px) 225px, (min-width: 768px) calc(100vw - 92px), calc(100vw - 60px)" alt="A spacious hotel lobby" loading="lazy" decoding="async" /></picture><figcaption class="credit">Photo: <a href="https://unsplash.com/@jakobowens1?utm_source=justingo&amp;utm_medium=referral">Jakob Owens</a> / <a href="https://unsplash.com/photos/a-large-room-with-a-lot-of-people-in-it-vIA62568oFs?utm_source=justingo&amp;utm_medium=referral">Unsplash</a></figcaption></figure>
             <div class="seg-body">
               <h3>Hotels &amp; hospitality</h3>
               <p class="pitch">Give every guest a run that starts at your front door and talks them round the neighbourhood.</p>
@@ -643,7 +645,7 @@
           </article>
 
           <article class="seg major">
-            <figure class="ph" role="img" aria-label="Placeholder image: race start line crowd"><svg aria-hidden="true"><use href="#i-image" /></svg><figcaption aria-hidden="true">Race start line photo</figcaption></figure>
+            <figure class="ph photo"><picture><source media="(min-width: 1040px)" srcset="https://images.unsplash.com/photo-1596727362302-b8d891c42ab8?auto=format&amp;fit=crop&amp;q=70&amp;w=240&amp;h=600 240w, https://images.unsplash.com/photo-1596727362302-b8d891c42ab8?auto=format&amp;fit=crop&amp;q=70&amp;w=480&amp;h=1200 480w" sizes="225px" /><img src="https://images.unsplash.com/photo-1596727362302-b8d891c42ab8?auto=format&amp;fit=crop&amp;q=70&amp;w=800&amp;h=600" srcset="https://images.unsplash.com/photo-1596727362302-b8d891c42ab8?auto=format&amp;fit=crop&amp;q=70&amp;w=480&amp;h=360 480w, https://images.unsplash.com/photo-1596727362302-b8d891c42ab8?auto=format&amp;fit=crop&amp;q=70&amp;w=800&amp;h=600 800w, https://images.unsplash.com/photo-1596727362302-b8d891c42ab8?auto=format&amp;fit=crop&amp;q=70&amp;w=1300&amp;h=975 1300w" sizes="(min-width: 1040px) 225px, (min-width: 768px) calc(100vw - 92px), calc(100vw - 60px)" alt="Runners filling a city street during a marathon" loading="lazy" decoding="async" /></picture><figcaption class="credit">Photo: <a href="https://unsplash.com/@amutiomi?utm_source=justingo&amp;utm_medium=referral">Miguel A Amutio</a> / <a href="https://unsplash.com/photos/people-walking-on-street-during-daytime-TqOFeBqnqrI?utm_source=justingo&amp;utm_medium=referral">Unsplash</a></figcaption></figure>
             <div class="seg-body">
               <h3>Races &amp; events</h3>
               <p class="pitch">Guide runners round your course, keep spectators on their dots and give sponsors a voice.</p>
@@ -660,7 +662,7 @@
           </article>
 
           <article class="seg">
-            <figure class="ph" role="img" aria-label="Placeholder image: runners on a city heritage trail"><svg aria-hidden="true"><use href="#i-image" /></svg><figcaption aria-hidden="true">Heritage trail photo</figcaption></figure>
+            <figure class="ph photo"><img src="https://images.unsplash.com/photo-1574854985846-97f10ecc922c?auto=format&amp;fit=crop&amp;q=70&amp;w=800&amp;h=600" srcset="https://images.unsplash.com/photo-1574854985846-97f10ecc922c?auto=format&amp;fit=crop&amp;q=70&amp;w=480&amp;h=360 480w, https://images.unsplash.com/photo-1574854985846-97f10ecc922c?auto=format&amp;fit=crop&amp;q=70&amp;w=800&amp;h=600 800w, https://images.unsplash.com/photo-1574854985846-97f10ecc922c?auto=format&amp;fit=crop&amp;q=70&amp;w=1300&amp;h=975 1300w" sizes="(min-width: 1040px) 225px, (min-width: 720px) calc(50vw - 50px), calc(100vw - 60px)" alt="Tower Bridge at golden hour" loading="lazy" decoding="async" /><figcaption class="credit">Photo: <a href="https://unsplash.com/@neotronimz?utm_source=justingo&amp;utm_medium=referral">Nirmal Rajendharkumar</a> / <a href="https://unsplash.com/photos/tower-bridge-during-golden-hour-qOW53gmp0cw?utm_source=justingo&amp;utm_medium=referral">Unsplash</a></figcaption></figure>
             <div class="seg-body">
               <h3>Tourism &amp; destinations</h3>
               <p class="pitch">Show visitors your city at running pace.</p>
@@ -674,7 +676,7 @@
           </article>
 
           <article class="seg">
-            <figure class="ph" role="img" aria-label="Placeholder image: office team running at lunchtime"><svg aria-hidden="true"><use href="#i-image" /></svg><figcaption aria-hidden="true">Team run photo</figcaption></figure>
+            <figure class="ph photo"><img src="https://images.unsplash.com/photo-1607962837359-5e7e89f86776?auto=format&amp;fit=crop&amp;q=70&amp;w=800&amp;h=600" srcset="https://images.unsplash.com/photo-1607962837359-5e7e89f86776?auto=format&amp;fit=crop&amp;q=70&amp;w=480&amp;h=360 480w, https://images.unsplash.com/photo-1607962837359-5e7e89f86776?auto=format&amp;fit=crop&amp;q=70&amp;w=800&amp;h=600 800w, https://images.unsplash.com/photo-1607962837359-5e7e89f86776?auto=format&amp;fit=crop&amp;q=70&amp;w=1300&amp;h=975 1300w" sizes="(min-width: 1040px) 225px, (min-width: 720px) calc(50vw - 50px), calc(100vw - 60px)" alt="A group of people running together" loading="lazy" decoding="async" /><figcaption class="credit">Photo: <a href="https://unsplash.com/@gabinvallet?utm_source=justingo&amp;utm_medium=referral">Gabin Vallet</a> / <a href="https://unsplash.com/photos/man-in-black-t-shirt-and-black-shorts-running-on-road-during-daytime-J154nEkpzlQ?utm_source=justingo&amp;utm_medium=referral">Unsplash</a></figcaption></figure>
             <div class="seg-body">
               <h3>Corporate wellness</h3>
               <p class="pitch">Get teams moving together, wherever they work.</p>
@@ -688,7 +690,7 @@
           </article>
 
           <article class="seg">
-            <figure class="ph" role="img" aria-label="Placeholder image: branded running kit on a route"><svg aria-hidden="true"><use href="#i-image" /></svg><figcaption aria-hidden="true">Brand activation photo</figcaption></figure>
+            <figure class="ph photo"><img src="https://images.unsplash.com/photo-1759674804375-3d0c038a0a6a?auto=format&amp;fit=crop&amp;q=70&amp;w=800&amp;h=600" srcset="https://images.unsplash.com/photo-1759674804375-3d0c038a0a6a?auto=format&amp;fit=crop&amp;q=70&amp;w=480&amp;h=360 480w, https://images.unsplash.com/photo-1759674804375-3d0c038a0a6a?auto=format&amp;fit=crop&amp;q=70&amp;w=800&amp;h=600 800w, https://images.unsplash.com/photo-1759674804375-3d0c038a0a6a?auto=format&amp;fit=crop&amp;q=70&amp;w=1300&amp;h=975 1300w" sizes="(min-width: 1040px) 225px, (min-width: 720px) calc(50vw - 50px), calc(100vw - 60px)" alt="Runners racing past in a blur" loading="lazy" decoding="async" /><figcaption class="credit">Photo: <a href="https://unsplash.com/@pierreantoinef?utm_source=justingo&amp;utm_medium=referral">Pierre-Antoine FRANCK</a> / <a href="https://unsplash.com/photos/runners-in-a-race-with-motion-blur-OpDIYfAb4WQ?utm_source=justingo&amp;utm_medium=referral">Unsplash</a></figcaption></figure>
             <div class="seg-body">
               <h3>Brands &amp; sponsors</h3>
               <p class="pitch">Be heard mid-run, not scrolled past.</p>
@@ -703,7 +705,7 @@
           </article>
 
           <article class="seg">
-            <figure class="ph" role="img" aria-label="Placeholder image: run club group photo"><svg aria-hidden="true"><use href="#i-image" /></svg><figcaption aria-hidden="true">Run club photo</figcaption></figure>
+            <figure class="ph photo"><img src="https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&amp;fit=crop&amp;q=70&amp;w=800&amp;h=600" srcset="https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&amp;fit=crop&amp;q=70&amp;w=480&amp;h=360 480w, https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&amp;fit=crop&amp;q=70&amp;w=800&amp;h=600 800w, https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&amp;fit=crop&amp;q=70&amp;w=1300&amp;h=975 1300w" sizes="(min-width: 1040px) 225px, (min-width: 720px) calc(50vw - 50px), calc(100vw - 60px)" alt="Three runners silhouetted against the morning sky" loading="lazy" decoding="async" /><figcaption class="credit">Photo: <a href="https://unsplash.com/@fitmasu?utm_source=justingo&amp;utm_medium=referral">Fitsum Admasu</a> / <a href="https://unsplash.com/photos/silhouette-of-three-women-running-on-grey-concrete-road-oGv9xIl7DkY?utm_source=justingo&amp;utm_medium=referral">Unsplash</a></figcaption></figure>
             <div class="seg-body">
               <h3>Clubs &amp; coaches</h3>
               <p class="pitch">Publish your routes and run your group in one place.</p>
@@ -768,7 +770,7 @@
   <footer>
     <div class="wrap">
       <a class="brand" href="/">Justin<span>Go</span></a>
-      <p>Map data © OpenStreetMap contributors · Map tiles © CARTO</p>
+      <p>Photos from Unsplash · Map data © OpenStreetMap contributors · Map tiles © CARTO</p>
       <p>© 2026 JustinGo</p>
     </div>
   </footer>

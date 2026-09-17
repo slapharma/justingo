@@ -100,7 +100,7 @@ export default function RouteDetail() {
             <View style={styles.creator} accessible accessibilityLabel={`Created by ${route.verified ? 'JustinGo team' : 'you'}`}>
               <User color={theme.muted} size={16} />
               <Text style={[styles.creatorText, { color: theme.muted }]}>
-                by {route.verified ? '@justingo' : '@you'} · {route.verified ? 'London routes group' : 'My routes'}
+                by {route.verified ? '@justingo' : '@you'} · {route.verified ? `${route.region ?? 'JustinGo'} routes group` : 'My routes'}
               </Text>
             </View>
           </View>

@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>JustinGo: London running routes with voice directions</title>
-  <meta name="description" content="Pick a route, press start and follow the voice. JustinGo gives you turn-by-turn directions on running routes across Greater London, with plans for runners, creators, hotels and races." />
+  <title>JustinGo: running routes in London and the South East, with voice directions</title>
+  <meta name="description" content="Pick a route, press start and follow the voice. JustinGo gives you turn-by-turn directions on running routes across London and South East England, with plans for runners, creators, hotels and races." />
   <meta name="theme-color" content="#FFFFFF" />
   <meta property="og:title" content="JustinGo" />
-  <meta property="og:description" content="Run anywhere in London. Just listen for the next turn." />
+  <meta property="og:description" content="Run anywhere in London and the South East. Just listen for the next turn." />
   <meta property="og:type" content="website" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -185,6 +185,8 @@
     .route strong { display: block; font-size: 18px; line-height: 1.25; }
     .route span { color: var(--muted); font-size: 15px; }
     .routes:empty { display: none; }
+    .route-region { font-family: var(--head); font-weight: 800; font-size: 24px; text-transform: uppercase; margin: 32px 0 12px; }
+    .route-region:first-child { margin-top: 0; }
     .routes-note { margin-top: 24px; color: var(--muted); }
 
     /* Pricing */
@@ -276,7 +278,7 @@
     <section class="hero" aria-labelledby="hero-title">
       <div class="wrap">
         <div>
-          <p class="eyebrow">Running routes for Greater London</p>
+          <p class="eyebrow">Running routes for London and the South East</p>
           <h1 id="hero-title">Just run.<br /><em>We'll say</em><br />where.</h1>
           <p class="lede">Pick a route, press start and put your phone away. JustinGo tells you every turn before you reach it, so you never stop to check a map.</p>
           <div class="cta-row">
@@ -541,10 +543,10 @@
     <section id="routes" aria-labelledby="routes-title">
       <div class="wrap">
         <div class="section-head">
-          <h2 id="routes-title">Across Greater London</h2>
+          <h2 id="routes-title">Across London and the South East</h2>
           <p>Every route checked and voiced, from a quick 3 km loop to nearly 19 km round Richmond Park.</p>
         </div>
-        <div class="routes" id="route-list" role="list"></div>
+        <div id="route-groups"></div>
         <p class="routes-note">Plus any route you draw yourself. <a href="/app/">Browse them all in the app</a>.</p>
       </div>
     </section>
@@ -791,32 +793,49 @@
     fetch('/routes.json')
       .then(function (r) { return r.ok ? r.json() : []; })
       .then(function (routes) {
-        var list = document.getElementById('route-list');
-        routes
-          .slice()
-          .sort(function (a, b) { return a.distance - b.distance; })
-          .forEach(function (route) {
-            var a = document.createElement('a');
-            a.className = 'route';
-            a.setAttribute('role', 'listitem');
-            a.href = '/app/route/' + encodeURIComponent(route.id);
-            var km = document.createElement('div');
-            km.className = 'km';
-            km.textContent = (route.distance / 1000).toFixed(1);
-            var unit = document.createElement('small');
-            unit.textContent = 'KM';
-            km.appendChild(unit);
-            var text = document.createElement('div');
-            var name = document.createElement('strong');
-            name.textContent = route.name;
-            var meta = document.createElement('span');
-            meta.textContent = route.area + ' · ' + (route.loop ? 'Loop' : 'A to B') + ' · ' + route.ascent + ' m climb';
-            text.appendChild(name);
-            text.appendChild(meta);
-            a.appendChild(km);
-            a.appendChild(text);
-            list.appendChild(a);
-          });
+        var groups = document.getElementById('route-groups');
+        // One list per region, in library order, shortest route first within each.
+        var regions = [];
+        routes.forEach(function (route) {
+          var name = route.region || 'More routes';
+          if (regions.indexOf(name) === -1) regions.push(name);
+        });
+        regions.forEach(function (region) {
+          var heading = document.createElement('h3');
+          heading.className = 'route-region';
+          heading.textContent = region;
+          var list = document.createElement('div');
+          list.className = 'routes';
+          list.setAttribute('role', 'list');
+          list.setAttribute('aria-label', region + ' routes');
+          groups.appendChild(heading);
+          groups.appendChild(list);
+          routes
+            .filter(function (route) { return (route.region || 'More routes') === region; })
+            .sort(function (a, b) { return a.distance - b.distance; })
+            .forEach(function (route) {
+              var a = document.createElement('a');
+              a.className = 'route';
+              a.setAttribute('role', 'listitem');
+              a.href = '/app/route/' + encodeURIComponent(route.id);
+              var km = document.createElement('div');
+              km.className = 'km';
+              km.textContent = (route.distance / 1000).toFixed(1);
+              var unit = document.createElement('small');
+              unit.textContent = 'KM';
+              km.appendChild(unit);
+              var text = document.createElement('div');
+              var name = document.createElement('strong');
+              name.textContent = route.name;
+              var meta = document.createElement('span');
+              meta.textContent = route.area + ' · ' + (route.loop ? 'Loop' : 'A to B') + ' · ' + route.ascent + ' m climb';
+              text.appendChild(name);
+              text.appendChild(meta);
+              a.appendChild(km);
+              a.appendChild(text);
+              list.appendChild(a);
+            });
+        });
       })
       .catch(function () {});
   </script>

@@ -21,6 +21,7 @@ export interface RouteInput {
   id: string;
   name: string;
   area: string;
+  region?: string;
   description: string;
   path: LngLat[];
   names?: NamedPoint[];
@@ -37,6 +38,7 @@ export function assembleRoute(input: RouteInput): Route {
     id: input.id,
     name: input.name,
     area: input.area,
+    region: input.region,
     description: input.description,
     path: input.path,
     distance,
@@ -50,13 +52,21 @@ export function assembleRoute(input: RouteInput): Route {
   };
 }
 
-/** Waypoints in, finished route out: snaps to foot paths, then adds elevation and turns. */
+/**
+ * Waypoints in, finished route out: snaps to foot paths, then adds elevation and turns. `snaps` is
+ * how far each waypoint moved onto a path, for spotting waypoints dropped in a field or a lake.
+ * With `withElevation` false the route is flat, which saves the elevation service a call when
+ * only checking a route's shape.
+ */
 export async function routeFromWaypoints(
   meta: Omit<RouteInput, 'path' | 'names' | 'elevation'>,
   waypoints: LngLat[],
   fetchImpl: typeof fetch = fetch,
-): Promise<Route> {
-  const { path, names } = await fetchFootRoute(waypoints, fetchImpl);
-  const elevation = await fetchElevation(samplePath(path, ELEVATION_SAMPLES), fetchImpl);
-  return assembleRoute({ ...meta, path, names, elevation });
+  withElevation = true,
+): Promise<{ route: Route; snaps: number[] }> {
+  const { path, names, snaps } = await fetchFootRoute(waypoints, fetchImpl);
+  const elevation = withElevation
+    ? await fetchElevation(samplePath(path, ELEVATION_SAMPLES), fetchImpl)
+    : new Array<number>(ELEVATION_SAMPLES).fill(0);
+  return { route: assembleRoute({ ...meta, path, names, elevation }), snaps };
 }

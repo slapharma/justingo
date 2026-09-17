@@ -32,7 +32,7 @@ export default function PreviewShell({ children }: { children: ReactNode }) {
           <Text style={styles.brand}>
             Justin<Text style={{ color: runTheme.accent }}>Go</Text>
           </Text>
-          <Text style={styles.tagline}>Run anywhere in London. Just listen for the next turn.</Text>
+          <Text style={styles.tagline}>Run anywhere in London and the South East. Just listen for the next turn.</Text>
           <Text style={styles.note}>
             This is the working app running in your browser, the same code that will ship to iPhone and Android.
           </Text>

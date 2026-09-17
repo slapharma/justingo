@@ -1,6 +1,7 @@
 # JustinGo
 
-JustinGo is a running app with turn-by-turn voice directions for routes across Greater London.
+JustinGo is a running app with turn-by-turn voice directions for routes across London and South
+East England.
 Pick a route, press start, and it tells you every turn before you reach it — no need to check a
 map mid-run. It's a personal project of Justin, modelled on the feature set of the RunGo app, with
 its own code, design, copy and routes.
@@ -17,8 +18,10 @@ accent colour. There's no dark mode (see `app/src/theme.ts`).
 app/            Expo Router app (TypeScript). The product itself.
   src/core/     Pure TypeScript navigation engine — no React Native imports, runs under Node.
   src/app/      Screens (file-based routing via Expo Router).
-  src/data/     routes.json, the built-in Greater London route library (committed, not fetched live).
-  scripts/      build-routes.ts (regenerates routes.json), copy-maplibre-worker.cjs (postinstall).
+  src/data/     routes.json, the built-in route library for London and South East England
+                (committed, not fetched live).
+  scripts/      build-routes.ts (regenerates routes.json) and its seeds/<region>.ts seed files,
+                copy-maplibre-worker.cjs (postinstall).
 site/           The static one-page marketing site (plain HTML/CSS/JS, no build step), covering
                 features by group, integrations, city guides, pricing, for-business sections and an FAQ.
 scripts/        build.mjs and serve-out.mjs, which assemble the Vercel deployment from app/ and site/.
@@ -123,6 +126,7 @@ It runs `npx expo export --platform web --output-dir dist --clear` inside `app/`
 - `out/` (site root) — a copy of `site/`
 - `out/app/` — the exported Expo web build
 - `out/routes.json` — a copy of `app/src/data/routes.json`, which the website's route list fetches
+  and groups by region
 
 It then checks that `index.html`, `app/index.html`, `app/maplibre/maplibre-gl-worker.mjs` and
 `routes.json` all exist in `out/`, and fails loudly if any are missing.
@@ -152,9 +156,12 @@ On Vercel itself, `vercel.json` sets:
 
 ## Regenerating routes
 
-The 16 built-in Greater London routes live in `app/src/data/routes.json`, committed so the app
-never has to call the routing or elevation services for its own library. To rebuild it from the
-waypoints in `app/scripts/build-routes.ts`:
+The 118 built-in routes live in `app/src/data/routes.json`, committed so the app never has to call
+the routing or elevation services for its own library. They're split across six regions: London
+(16), Kent (20), Sussex (21), Surrey (21), Hampshire & Isle of Wight (20) and Thames Valley (20).
+Each region's waypoints live in their own seed file, `app/scripts/seeds/<region>.ts` (the seed
+shape is defined in `app/scripts/seeds/types.ts`). To rebuild the whole library from those seed
+files:
 
 ```
 cd C:\dev\justingo\app
@@ -162,18 +169,26 @@ node scripts/build-routes.ts
 ```
 
 Each route is a hand-picked list of waypoints, snapped to real footpaths by the OSRM foot router,
-with elevation added from Open-Meteo and turns detected from the resulting geometry. Pass a route
-ID as an argument to rebuild just one route without touching the committed file (useful for
-checking a change before regenerating everything):
+with elevation added from Open-Meteo and turns detected from the resulting geometry. Pass a region
+name (`london`, `kent`, `sussex`, `surrey`, `hampshire` or `thames-valley`) to dry-run just that
+region's seed file, or one or more route IDs to dry-run just those routes — either way nothing is
+written to the committed file, and elevation is skipped, so climb shows as 0 m:
+
+```
+cd C:\dev\justingo\app
+node scripts/build-routes.ts kent
+```
 
 ```
 cd C:\dev\justingo\app
 node scripts/build-routes.ts hyde-park-loop
 ```
 
+The script warns if a route has a u-turn, or if a waypoint snapped more than 75 m from a path
+(likely dropped in a field, lake or garden) — a new or changed route should print zero warnings.
 Only re-run this when adding or changing a route — it calls two free, rate-limited public services,
 so running it needlessly is inconsiderate to them. The script identifies itself with a `User-Agent`
-and backs off on HTTP 429.
+and backs off on HTTP 429 for up to about 45 minutes, since Open-Meteo's free tier limit is hourly.
 
 ## Services & attribution
 

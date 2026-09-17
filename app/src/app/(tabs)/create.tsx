@@ -125,7 +125,7 @@ export default function Create() {
       const { name: gpxName, path: gpxPath } = parseGpx(await file.text());
       reset();
       setImported(true);
-      setSnapped({ path: gpxPath, names: [] });
+      setSnapped({ path: gpxPath, names: [], snaps: [] });
       setName(gpxName);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Could not read that GPX file.');

@@ -59,6 +59,7 @@ export const CITY_GUIDES: CityGuide[] = [
     blurb: 'White cliffs, seaside promenades and deer parks in the Garden of England.',
     routeIds: ['dover-white-cliffs', 'whitstable-herne-bay-seafront', 'canterbury-great-stour', 'knole-park-sevenoaks', 'bedgebury-forest'],
     neighbourhoods: ['Canterbury', 'Whitstable', 'Folkestone', 'Sevenoaks', 'Maidstone'],
+    photo: 'clubs',
   },
   {
     id: 'sussex',
@@ -66,6 +67,7 @@ export const CITY_GUIDES: CityGuide[] = [
     blurb: 'Seafronts, chalk cliffs and the South Downs Way.',
     routeIds: ['brighton-hove-seafront', 'seven-sisters-cuckmere-haven', 'south-downs-way-ditchling-dyke', 'ashdown-forest-gills-lap', 'chichester-walls-canal'],
     neighbourhoods: ['Brighton', 'Eastbourne', 'Worthing', 'Chichester', 'Lewes'],
+    photo: 'brands',
   },
   {
     id: 'surrey',
@@ -73,6 +75,7 @@ export const CITY_GUIDES: CityGuide[] = [
     blurb: 'Big hills, sandy heaths and quiet towpaths.',
     routeIds: ['box-hill-stepping-stones', 'leith-hill-tower', 'hindhead-devils-punch-bowl', 'virginia-water-lake', 'guildford-godalming-wey'],
     neighbourhoods: ['Dorking', 'Guildford', 'Farnham', 'Woking', 'Reigate'],
+    photo: 'corporate',
   },
   {
     id: 'hampshire',
@@ -80,6 +83,7 @@ export const CITY_GUIDES: CityGuide[] = [
     blurb: 'The New Forest, Solent shores and island clifftops.',
     routeIds: ['brockenhurst-new-forest', 'winchester-water-meadows', 'southsea-seafront', 'lymington-keyhaven-sea-wall', 'tennyson-down-needles'],
     neighbourhoods: ['Winchester', 'Portsmouth', 'Southampton', 'Lymington', 'Cowes'],
+    photo: 'race',
   },
   {
     id: 'thames-valley',
@@ -87,6 +91,7 @@ export const CITY_GUIDES: CityGuide[] = [
     blurb: 'Riverside miles, Chiltern beechwoods and Oxford meadows.',
     routeIds: ['windsor-long-walk', 'port-meadow-oxford', 'burnham-beeches', 'henley-regatta-course', 'coombe-hill-wendover'],
     neighbourhoods: ['Windsor', 'Reading', 'Oxford', 'Henley', 'Marlow'],
+    photo: 'clubs',
   },
 ];
 

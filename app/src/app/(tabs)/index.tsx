@@ -2,14 +2,14 @@ import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { FlatList, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { DemoButton, Placeholder, Rail, SectionTitle, Segmented } from '../../components/demo';
+import { DemoButton, DemoPhoto, Rail, SectionTitle, Segmented } from '../../components/demo';
 import RouteCard from '../../components/RouteCard';
 import RouteMap from '../../components/RouteMap';
 import type { MapLine } from '../../components/RouteMap.types';
 import { Body, Card, Chip } from '../../components/ui';
 import type { Route } from '../../core/types';
 import { CITY_GUIDES, HOTELS } from '../../demoData';
-import { Footprints, Hotel, Landmark, Search } from '../../icons';
+import { Footprints, Search } from '../../icons';
 import { useRoutes } from '../../store';
 import { font, radius, space, useTheme } from '../../theme';
 
@@ -87,7 +87,7 @@ export default function Discover() {
             <Rail>
               {CITY_GUIDES.map((c) => (
                 <Card key={c.id} onPress={() => router.push({ pathname: '/city/[id]', params: { id: c.id } })} accessibilityLabel={`${c.name} city guide`} style={{ width: 170, padding: space.sm, gap: space.xs }}>
-                  <Placeholder label={c.name} ratio={4 / 3} icon={Landmark} />
+                  <DemoPhoto photo={c.photo} ratio={4 / 3} width={154} />
                   <Text style={[styles.cardTitle, { color: theme.ink }]}>{c.name}</Text>
                   <Text style={[styles.meta, { color: theme.muted }]}>{c.routeIds.length} routes</Text>
                 </Card>
@@ -96,7 +96,7 @@ export default function Discover() {
 
             <SectionTitle title="Runner-friendly hotels" />
             <Card onPress={() => router.push('/hotels')} accessibilityLabel="Find runner-friendly hotels" style={{ flexDirection: 'row', alignItems: 'center', gap: space.md }}>
-              <Placeholder label="Hotel" ratio={1} style={{ width: 64 }} icon={Hotel} />
+              <DemoPhoto photo="hotel" ratio={1} width={64} style={{ width: 64 }} />
               <View style={{ flex: 1 }}>
                 <Text style={[styles.cardTitle, { color: theme.ink }]}>{HOTELS.length} hotels with lobby routes</Text>
                 <Text style={[styles.meta, { color: theme.muted }]}>Guided runs from the front door</Text>

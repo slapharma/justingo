@@ -1,13 +1,20 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { DemoButton, Placeholder, Rail, SectionTitle } from '../../components/demo';
+import { DemoButton, DemoPhoto, Rail, SectionTitle } from '../../components/demo';
 import RouteCard from '../../components/RouteCard';
 import ScreenHeader from '../../components/ScreenHeader';
 import { Badge, Body, Card, EmptyState } from '../../components/ui';
 import { CITY_GUIDES, HOTELS, VIRTUAL_RACES } from '../../demoData';
-import { Hotel, Landmark, MapPin } from '../../icons';
+import { MapPin } from '../../icons';
+import type { PhotoKey } from '../../photos';
 import { LIBRARY } from '../../store';
 import { font, space, useTheme } from '../../theme';
+
+const UNIQUE_RUNS: { title: string; photo: PhotoKey }[] = [
+  { title: 'Landmarks at sunrise', photo: 'tourism' },
+  { title: 'Riverside evening run', photo: 'thames' },
+  { title: 'Deer-spotting walk', photo: 'west' },
+];
 
 /** City guide: real routes for the area, plus demo neighbourhoods, hotels and races. */
 export default function CityGuide() {
@@ -30,7 +37,7 @@ export default function CityGuide() {
     <View style={{ flex: 1, backgroundColor: theme.bg }}>
       <ScreenHeader title={guide.name} />
       <ScrollView contentContainerStyle={{ paddingHorizontal: space.lg, paddingBottom: space.xxl, gap: space.md }}>
-        <Placeholder label={`${guide.name} skyline`} ratio={16 / 9} icon={Landmark} />
+        <DemoPhoto photo={guide.photo} ratio={16 / 9} />
         <Body>{guide.blurb}</Body>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
           {guide.neighbourhoods.map((n) => (
@@ -47,7 +54,7 @@ export default function CityGuide() {
         <Rail>
           {HOTELS.slice(0, 3).map((h) => (
             <Card key={h.id} style={{ width: 220, gap: space.xs }}>
-              <Placeholder label="Hotel photo" ratio={4 / 3} icon={Hotel} />
+              <DemoPhoto photo={h.photo} ratio={4 / 3} width={196} />
               <Text style={[styles.cardTitle, { color: theme.ink }]}>{h.name}</Text>
               <Text style={[styles.meta, { color: theme.muted }]}>{h.routes}</Text>
             </Card>
@@ -67,9 +74,9 @@ export default function CityGuide() {
 
         <SectionTitle title="Unique runs" />
         <Rail>
-          {['Airport layover run', 'Sunrise photo route', 'Family park walk'].map((t) => (
+          {UNIQUE_RUNS.map(({ title: t, photo }) => (
             <Card key={t} style={{ width: 200, gap: space.xs }}>
-              <Placeholder label={t} ratio={4 / 3} />
+              <DemoPhoto photo={photo} ratio={4 / 3} width={176} />
               <Text style={[styles.cardTitle, { color: theme.ink, fontSize: 17 }]}>{t}</Text>
             </Card>
           ))}

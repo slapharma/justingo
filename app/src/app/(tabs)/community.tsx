@@ -1,13 +1,20 @@
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { DemoButton, Placeholder, Rail, SectionTitle, Segmented } from '../../components/demo';
+import { DemoButton, DemoPhoto, Rail, SectionTitle, Segmented } from '../../components/demo';
 import { Card, Heading } from '../../components/ui';
 import { BADGES, CHALLENGES, GROUPS, LEADERBOARD, VIRTUAL_RACES } from '../../demoData';
-import { CirclePlus, Flag, Medal, Search, Trophy, Users } from '../../icons';
+import { CirclePlus, Flag, Medal, Search, Trophy } from '../../icons';
+import type { PhotoKey } from '../../photos';
 import { font, radius, space, useTheme } from '../../theme';
 
 const SECTIONS = ['Challenges', 'Groups', 'Races'];
+const GROUP_PHOTOS: Record<string, PhotoKey> = { g1: 'clubs', g2: 'corporate', g3: 'race' };
+const CLUB_FEATURES: { title: string; photo: PhotoKey }[] = [
+  { title: 'Weekly route drops', photo: 'central' },
+  { title: 'Club leaderboard', photo: 'corporate' },
+  { title: 'Private club routes', photo: 'clubs' },
+];
 
 /** Demo: groups, challenges, leaderboards, badges and virtual races. Nothing here is wired yet. */
 export default function Community() {
@@ -79,7 +86,7 @@ export default function Community() {
           <SectionTitle title="Nearby groups" />
           {GROUPS.map((g) => (
             <Card key={g.id} style={{ flexDirection: 'row', gap: space.md, alignItems: 'center' }}>
-              <Placeholder label="Logo" ratio={1} style={{ width: 64 }} icon={Users} />
+              <DemoPhoto photo={GROUP_PHOTOS[g.id] ?? 'clubs'} ratio={1} width={64} style={{ width: 64 }} />
               <View style={{ flex: 1, gap: 2 }}>
                 <Text style={[styles.cardTitle, { color: theme.ink }]}>{g.name}</Text>
                 <Text style={[styles.meta, { color: theme.muted }]}>
@@ -91,9 +98,9 @@ export default function Community() {
           ))}
           <SectionTitle title="Run clubs" />
           <Rail>
-            {['Weekly route drops', 'Club leaderboard', 'Private club routes'].map((t) => (
+            {CLUB_FEATURES.map(({ title: t, photo }) => (
               <Card key={t} style={{ width: 200, gap: space.sm }}>
-                <Placeholder label={t} ratio={4 / 3} />
+                <DemoPhoto photo={photo} ratio={4 / 3} width={176} />
                 <Text style={[styles.body, { color: theme.ink, fontFamily: font.bodyBold }]}>{t}</Text>
               </Card>
             ))}
@@ -106,7 +113,7 @@ export default function Community() {
           <SectionTitle title="Virtual races" />
           {VIRTUAL_RACES.map((r) => (
             <Card key={r.id} style={{ gap: space.sm }}>
-              <Placeholder label="Race banner" ratio={21 / 9} />
+              <DemoPhoto photo={r.id === 'v1' ? 'race' : 'brands'} ratio={21 / 9} />
               <Text style={[styles.cardTitle, { color: theme.ink }]}>{r.title}</Text>
               <View style={{ flexDirection: 'row', gap: space.md }}>
                 <Text style={[styles.meta, { color: theme.muted }]}>

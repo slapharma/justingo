@@ -1,6 +1,7 @@
 // Content for demo-only screens (city guides, hotels, community, plans, business). All names are
 // invented placeholders: no real hotels, races, clubs or brands. Real product data lives in store.ts.
 import type { Tier } from './components/demo';
+import type { PhotoKey } from './photos';
 
 export interface CityGuide {
   id: string;
@@ -8,6 +9,7 @@ export interface CityGuide {
   blurb: string;
   routeIds: string[];
   neighbourhoods: string[];
+  photo: PhotoKey;
 }
 
 export const CITY_GUIDES: CityGuide[] = [
@@ -17,6 +19,7 @@ export const CITY_GUIDES: CityGuide[] = [
     blurb: 'Royal parks, the Thames and the canal. Flat, busy early, beautiful at dawn.',
     routeIds: ['hyde-park-loop', 'regents-park-primrose-hill', 'thames-bridges-loop', 'regents-canal'],
     neighbourhoods: ['Westminster', 'South Bank', 'Marylebone', 'King’s Cross'],
+    photo: 'central',
   },
   {
     id: 'north',
@@ -24,6 +27,7 @@ export const CITY_GUIDES: CityGuide[] = [
     blurb: 'Hills and views: the Heath, Parliament Hill and Ally Pally.',
     routeIds: ['hampstead-heath', 'alexandra-palace'],
     neighbourhoods: ['Hampstead', 'Highgate', 'Muswell Hill'],
+    photo: 'north',
   },
   {
     id: 'east',
@@ -31,6 +35,7 @@ export const CITY_GUIDES: CityGuide[] = [
     blurb: 'Fast, flat laps and the Olympic Park.',
     routeIds: ['victoria-park', 'olympic-park'],
     neighbourhoods: ['Hackney', 'Stratford', 'Bow'],
+    photo: 'east',
   },
   {
     id: 'south',
@@ -38,6 +43,7 @@ export const CITY_GUIDES: CityGuide[] = [
     blurb: 'Commons, riverside parks and Greenwich’s hill.',
     routeIds: ['clapham-common', 'battersea-park', 'crystal-palace', 'greenwich-park'],
     neighbourhoods: ['Clapham', 'Battersea', 'Greenwich', 'Crystal Palace'],
+    photo: 'south',
   },
   {
     id: 'west',
@@ -45,6 +51,7 @@ export const CITY_GUIDES: CityGuide[] = [
     blurb: 'Big green spaces: Richmond Park, Bushy Park and the Thames Path.',
     routeIds: ['richmond-park-gates', 'bushy-park', 'kew-richmond-thames', 'wimbledon-common'],
     neighbourhoods: ['Richmond', 'Kew', 'Wimbledon', 'Teddington'],
+    photo: 'west',
   },
 ];
 
@@ -54,13 +61,14 @@ export interface HotelDemo {
   area: string;
   routes: string;
   perks: string[];
+  photo: PhotoKey;
 }
 
 export const HOTELS: HotelDemo[] = [
-  { id: 'h1', name: 'The Parkside Hotel', area: 'Knightsbridge', routes: '3 routes from the lobby', perks: ['Concierge-narrated 5K', 'Mindful morning walk', 'Juice bar finish'] },
-  { id: 'h2', name: 'Riverside Grand', area: 'South Bank', routes: '2 routes from the lobby', perks: ['Bridges 10K', 'Marathon shakeout run'] },
-  { id: 'h3', name: 'Canal House', area: 'King’s Cross', routes: '2 routes from the lobby', perks: ['Towpath 5K', 'Bike tour'] },
-  { id: 'h4', name: 'Hilltop Lodge', area: 'Hampstead', routes: '1 route from the lobby', perks: ['Heath hills loop'] },
+  { id: 'h1', name: 'The Parkside Hotel', area: 'Knightsbridge', routes: '3 routes from the lobby', perks: ['Concierge-narrated 5K', 'Mindful morning walk', 'Juice bar finish'], photo: 'hotel' },
+  { id: 'h2', name: 'Riverside Grand', area: 'South Bank', routes: '2 routes from the lobby', perks: ['Bridges 10K', 'Marathon shakeout run'], photo: 'thames' },
+  { id: 'h3', name: 'Canal House', area: 'King’s Cross', routes: '2 routes from the lobby', perks: ['Towpath 5K', 'Bike tour'], photo: 'tourism' },
+  { id: 'h4', name: 'Hilltop Lodge', area: 'Hampstead', routes: '1 route from the lobby', perks: ['Heath hills loop'], photo: 'north' },
 ];
 
 export const CHALLENGES = [
@@ -126,7 +134,7 @@ export interface BusinessModel {
   title: string;
   pitch: string;
   bullets: string[];
-  image: string;
+  photo: PhotoKey;
 }
 
 export const BUSINESS: BusinessModel[] = [
@@ -135,41 +143,41 @@ export const BUSINESS: BusinessModel[] = [
     title: 'Hotels & hospitality',
     pitch: 'Give every guest a local running guide from the lobby.',
     bullets: ['Voice-guided routes narrated by your staff', 'Brand page, QR room cards and website embeds', 'Concierge mapping tool and digital hotel guide', 'Listing in the JustinGo hotel finder', 'Usage analytics'],
-    image: 'Hotel lobby with runners',
+    photo: 'hotel',
   },
   {
     id: 'races',
     title: 'Races & events',
     pitch: 'Course maps, audio guidance and live tracking in one place.',
     bullets: ['Course map embeds for your race site', 'Audio course guidance with sponsor messages', 'Live tracking map for spectators', 'Leaderboards, virtual races and digital medals', 'GPS start and finish timing'],
-    image: 'Race start line',
+    photo: 'race',
   },
   {
     id: 'tourism',
     title: 'Tourism & destinations',
     pitch: 'Turn your city into a series of guided runs and walks.',
     bullets: ['Official city guides', 'Themed audio trails', 'Seasonal challenge series'],
-    image: 'City landmark at sunrise',
+    photo: 'tourism',
   },
   {
     id: 'corporate',
     title: 'Corporate wellness',
     pitch: 'Team challenges that get people moving.',
     bullets: ['Company leaderboards', 'Virtual team races', 'Charity step challenges'],
-    image: 'Colleagues running together',
+    photo: 'corporate',
   },
   {
     id: 'brands',
     title: 'Brands & sponsors',
     pitch: 'Reach runners at the moment they’re moving.',
     bullets: ['Audio activations along routes', 'Branded routes and badges', 'Sponsored share images'],
-    image: 'Branded event arch',
+    photo: 'brands',
   },
   {
     id: 'clubs',
     title: 'Clubs & coaches',
     pitch: 'Share routes and sessions with your members.',
     bullets: ['Creator plan and branded groups', 'Weekly route drops', 'Member challenges'],
-    image: 'Run club meet-up',
+    photo: 'clubs',
   },
 ];

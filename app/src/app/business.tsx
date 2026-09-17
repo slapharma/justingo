@@ -1,9 +1,9 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { DemoButton, Placeholder } from '../components/demo';
+import { DemoButton, DemoPhoto } from '../components/demo';
 import ScreenHeader from '../components/ScreenHeader';
 import { Body, Card } from '../components/ui';
 import { BUSINESS } from '../demoData';
-import { Building, Check } from '../icons';
+import { Check } from '../icons';
 import { font, space, useTheme } from '../theme';
 
 /** Demo: how JustinGo earns money beyond subscriptions. */
@@ -16,7 +16,7 @@ export default function Business() {
         <Body muted>Guided routes and challenges for the places and events runners go to.</Body>
         {BUSINESS.map((b) => (
           <Card key={b.id} style={{ gap: space.sm }}>
-            <Placeholder label={b.image} icon={Building} />
+            <DemoPhoto photo={b.photo} />
             <Text style={[styles.title, { color: theme.ink }]}>{b.title}</Text>
             <Text style={[styles.pitch, { color: theme.ink }]}>{b.pitch}</Text>
             {b.bullets.map((x) => (

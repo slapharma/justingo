@@ -1,9 +1,9 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { DemoButton, Placeholder } from '../components/demo';
+import { DemoButton, DemoPhoto } from '../components/demo';
 import ScreenHeader from '../components/ScreenHeader';
 import { Badge, Body, Card } from '../components/ui';
 import { HOTELS } from '../demoData';
-import { Hotel, QrCode, Search } from '../icons';
+import { QrCode, Search } from '../icons';
 import { font, space, useTheme } from '../theme';
 
 /** Demo hotel finder: hotels with guided routes from the lobby. Hotel names are invented. */
@@ -20,7 +20,7 @@ export default function Hotels() {
         </View>
         {HOTELS.map((h) => (
           <Card key={h.id} style={{ gap: space.sm }}>
-            <Placeholder label={`${h.name} exterior`} icon={Hotel} />
+            <DemoPhoto photo={h.photo} />
             <Text style={[styles.title, { color: theme.ink }]}>{h.name}</Text>
             <Text style={[styles.meta, { color: theme.muted }]}>
               {h.area} · {h.routes}

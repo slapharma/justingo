@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { Camera, ChevronLeft, CloudDownload, Code, Cross, Download, Droplets, Eye, MessageSquare, MountainSnow, Navigation, Play, QrCode, Radio, Share2, Toilet, Trash, User, Utensils } from '../../icons';
+import { ChevronLeft, CloudDownload, Code, Cross, Download, Droplets, Eye, MessageSquare, MountainSnow, Navigation, Play, QrCode, Radio, Share2, Toilet, Trash, User, Utensils } from '../../icons';
 import { useMemo, useState } from 'react';
 import { Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -7,7 +7,9 @@ import ElevationChart from '../../components/ElevationChart';
 import RouteMap from '../../components/RouteMap';
 import type { MapPin } from '../../components/RouteMap.types';
 import TurnIcon from '../../components/TurnIcon';
-import { DemoButton, Placeholder, Rail, Segmented } from '../../components/demo';
+import { DemoButton, DemoPhoto, Rail, Segmented } from '../../components/demo';
+import { CITY_GUIDES } from '../../demoData';
+import type { PhotoKey } from '../../photos';
 import { Badge, Body, Button, Card, EmptyState, Heading, IconButton, Stat } from '../../components/ui';
 import { buildCues } from '../../core/engine';
 import { cumulativeDistances, pointAlong } from '../../core/geo';
@@ -18,6 +20,12 @@ import { font, space, useTheme } from '../../theme';
 
 const CUE_PREVIEW = 6;
 const START_MODES = ['On course', 'Virtual outdoor', 'Treadmill'];
+
+/** Demo gallery: the photo for the route's area of London, then runners. Your own routes get the runners. */
+function galleryFor(routeId: string): PhotoKey[] {
+  const area = CITY_GUIDES.find((c) => c.routeIds.includes(routeId))?.photo;
+  return area ? [area, 'corporate', 'clubs'] : ['corporate', 'clubs', 'brands'];
+}
 /** Demo points of interest shown on every route until real POI data exists. */
 const POIS = [
   { icon: Droplets, label: 'Water' },
@@ -106,8 +114,8 @@ export default function RouteDetail() {
           {route.description ? <Body>{route.description}</Body> : null}
 
           <Rail>
-            {['Start point', 'On the route', 'Finish view'].map((label) => (
-              <Placeholder key={label} label={label} ratio={4 / 3} style={{ width: 180 }} icon={Camera} />
+            {galleryFor(route.id).map((photo) => (
+              <DemoPhoto key={photo} photo={photo} ratio={4 / 3} width={180} style={{ width: 180 }} />
             ))}
           </Rail>
           <Body muted style={{ fontSize: 14 }}>About {estimate(route.distance)} at 5:30 per km.</Body>

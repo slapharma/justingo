@@ -1,8 +1,9 @@
 // Building blocks for demo-only features: placeholder imagery and buttons that are deliberately not
 // wired to anything yet. Kept separate from ui.tsx so it is obvious which parts of a screen are real.
 import type { ReactNode } from 'react';
-import { Platform, Pressable, ScrollView, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
+import { Image, Platform, Pressable, ScrollView, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 import { ChevronRight, Image as ImageIcon, Lock, type LucideIcon } from '../icons';
+import { PHOTOS, photoUrl, type PhotoKey } from '../photos';
 import { font, radius, space, useTheme } from '../theme';
 
 export type Tier = 'free' | 'premium' | 'creator';
@@ -26,6 +27,27 @@ export function Placeholder({ label, ratio = 16 / 9, style, icon: Icon = ImageIc
       <Text numberOfLines={2} style={[styles.placeholderText, { color: theme.muted }]}>
         {label}
       </Text>
+    </View>
+  );
+}
+
+/**
+ * A demo photo from the Unsplash set in photos.ts. `width` is roughly how wide it renders, used to
+ * request a right-sized crop. Small thumbnails skip the photographer credit because it wouldn't fit.
+ */
+export function DemoPhoto({ photo, ratio = 16 / 9, width = 360, style }: { photo: PhotoKey; ratio?: number; width?: number; style?: StyleProp<ViewStyle> }) {
+  const theme = useTheme();
+  const p = PHOTOS[photo];
+  return (
+    <View style={[styles.photo, { aspectRatio: ratio, backgroundColor: theme.surfaceAlt }, style]}>
+      <Image source={{ uri: photoUrl(p, width, ratio) }} style={StyleSheet.absoluteFill} resizeMode="cover" accessibilityLabel={p.alt} accessible />
+      {width >= 160 && (
+        <View style={styles.credit} accessible={false}>
+          <Text style={styles.creditText} numberOfLines={1}>
+            {p.author} / Unsplash
+          </Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -146,6 +168,9 @@ export function Segmented({ options, value, onChange, label }: { options: string
 const styles = StyleSheet.create({
   placeholder: { borderRadius: radius.md, borderWidth: 1, alignItems: 'center', justifyContent: 'center', gap: 6, padding: space.sm, overflow: 'hidden' },
   placeholderText: { fontFamily: font.bodyMedium, fontSize: 12, textAlign: 'center' },
+  photo: { borderRadius: radius.md, overflow: 'hidden' },
+  credit: { position: 'absolute', right: 6, bottom: 6, maxWidth: '90%', backgroundColor: 'rgba(10,10,10,0.72)', borderRadius: 5, paddingHorizontal: 6, paddingVertical: 2 },
+  creditText: { color: '#FFFFFF', fontFamily: font.bodyMedium, fontSize: 10 },
   tier: { flexDirection: 'row', alignItems: 'center', gap: 3, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 5 },
   tierText: { fontFamily: font.bodyBold, fontSize: 10, textTransform: 'uppercase', letterSpacing: 0.4 },
   demoButton: { minHeight: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingHorizontal: space.md, borderRadius: radius.md, borderWidth: 1.5, cursor: 'pointer' } as ViewStyle,

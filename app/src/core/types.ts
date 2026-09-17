@@ -32,6 +32,8 @@ export interface Route {
   id: string;
   name: string;
   area: string;
+  /** Library region, e.g. "Kent" or "Thames Valley". Absent on routes the user created. */
+  region?: string;
   description: string;
   /** Route geometry, first point is the start. */
   path: LngLat[];

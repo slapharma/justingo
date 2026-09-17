@@ -14,11 +14,14 @@ interface OsrmResponse {
   code: string;
   message?: string;
   routes: { geometry: { coordinates: LngLat[] }; legs: { steps: OsrmStep[] }[] }[];
+  waypoints?: { distance: number }[];
 }
 
 export interface FootRoute {
   path: LngLat[];
   names: NamedPoint[];
+  /** Metres each input waypoint moved to reach the nearest path. A big one means a bad waypoint. */
+  snaps: number[];
 }
 
 /** Drops consecutive duplicate points, which OSRM emits at waypoint joins. */
@@ -43,7 +46,7 @@ export function parseOsrm(json: OsrmResponse): FootRoute {
       names.push({ at: p.along, name: step.name });
     }
   }
-  return { path, names };
+  return { path, names, snaps: (json.waypoints ?? []).map((w) => Math.round(w.distance)) };
 }
 
 /** Routes on foot through the given waypoints, following paths and parks, not just roads. */

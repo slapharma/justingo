@@ -22,6 +22,8 @@ const FILTERS: { label: string; test: (r: Route) => boolean }[] = [
   { label: 'Trails', test: (r) => r.surface === 'trail' },
 ];
 
+const ALL_REGIONS = 'All regions';
+
 const SOURCES: Record<string, (r: Route) => boolean> = {
   All: () => true,
   'My routes': (r) => !r.verified,
@@ -34,7 +36,13 @@ export default function Discover() {
   const { routes } = useRoutes();
   const [filter, setFilter] = useState(0);
   const [source, setSource] = useState('All');
-  const visible = useMemo(() => routes.filter((r) => SOURCES[source](r) && FILTERS[filter].test(r)), [routes, filter, source]);
+  const [region, setRegion] = useState(ALL_REGIONS);
+  // Library order, which is region by region, so the chips read London first.
+  const regions = useMemo(() => [ALL_REGIONS, ...new Set(routes.flatMap((r) => (r.region ? [r.region] : [])))], [routes]);
+  const visible = useMemo(
+    () => routes.filter((r) => SOURCES[source](r) && FILTERS[filter].test(r) && (region === ALL_REGIONS || r.region === region)),
+    [routes, filter, source, region],
+  );
   const lines = useMemo<MapLine[]>(() => visible.map((r) => ({ id: r.id, path: r.path, emphasis: 'dim' })), [visible]);
   const open = (id: string) => router.push({ pathname: '/route/[id]', params: { id } });
   // Only claim the user has no routes when that's true, not when a filter hides the ones they have.
@@ -47,7 +55,7 @@ export default function Discover() {
           Justin<Text style={{ color: theme.accent }}>Go</Text>
         </Text>
         <Body muted style={{ fontSize: 15 }}>
-          {routes.length} routes across Greater London
+          {routes.length} routes across London and the South East
         </Body>
       </View>
 
@@ -107,11 +115,16 @@ export default function Discover() {
             <Segmented options={Object.keys(SOURCES)} value={source} onChange={setSource} label="Route source" />
             <RouteMap
               lines={lines}
-              fitKey={`${source}-${filter}`}
+              fitKey={`${source}-${filter}-${region}`}
               onLinePress={open}
               style={[styles.map, { borderColor: theme.border }]}
               label={`Map of ${visible.length} routes. Select a route line to open it.`}
             />
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: space.sm }}>
+              {regions.map((r) => (
+                <Chip key={r} label={r} selected={r === region} onPress={() => setRegion(r)} />
+              ))}
+            </ScrollView>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: space.sm }}>
               {FILTERS.map((f, i) => (
                 <Chip key={f.label} label={f.label} selected={i === filter} onPress={() => setFilter(i)} />

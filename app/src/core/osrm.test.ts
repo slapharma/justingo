@@ -54,6 +54,16 @@ describe('parseOsrm success path', () => {
     assert.ok(Math.abs(result.names[0].at - 100) < 1, `at ${result.names[0].at}`);
     assert.equal(result.names[1].name, 'Exhibition Rd');
     assert.ok(Math.abs(result.names[1].at - 300) < 1, `at ${result.names[1].at}`);
+    assert.deepEqual(result.snaps, [], 'no waypoints in the response means no snap distances');
+  });
+
+  it('reports how far each waypoint was moved onto a path, rounded to the metre', () => {
+    const json = {
+      code: 'Ok',
+      routes: [{ geometry: { coordinates: [m(0, 0), m(100, 0)] }, legs: [{ steps: [] }] }],
+      waypoints: [{ distance: 3.4 }, { distance: 212.6 }],
+    };
+    assert.deepEqual(parseOsrm(json as any).snaps, [3, 213]);
   });
 });
 
